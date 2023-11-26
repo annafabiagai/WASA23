@@ -1,4 +1,6 @@
 openapi: 3.0.0
+
+
 info: 
   description: "WASAphoto: uploading and sharing photos with your friends. API made by 1982464 ."
   title : WASAphoto
@@ -6,10 +8,6 @@ info:
   
 
 
-
-      
-security:
-  - bearerAuth: []
 
 
 paths:
@@ -32,7 +30,7 @@ paths:
                 name:
                   type: string 
                   example: Maria 
-                  pattern: 'ˆ.*?$' 
+                  pattern: '^.*?$'
                   minLength: 3 
                   maxLength: 16
         required: true 
@@ -47,6 +45,9 @@ paths:
                  identifier:
                     type: string
                     example: "abcdef012345"
+      security:
+        - bearerAuth: []
+
   
   #collection 
   
@@ -65,7 +66,7 @@ paths:
           schema:
             description: identifier 
             type: string 
-            pattern: 'ˆ.*?$' 
+            pattern: '^.*?$' 
             minLength: 3 
             maxLength: 16
             example: "Ann03"
@@ -82,7 +83,9 @@ paths:
 
         '500': 
           $ref: "#/components/responses/server_error"
-          
+      
+      security:
+        - bearerAuth: []
           
      
   
@@ -115,6 +118,10 @@ paths:
 
         '500': 
           $ref: "#/components/responses/server_error"
+      
+      security:
+        - bearerAuth: []
+
    
   
     put :
@@ -135,11 +142,13 @@ paths:
           
         '500': 
           $ref: "#/components/responses/server_error"
+      
+      security:
+        - bearerAuth: []
+
         
       
       
-      
-  
   
   /users/{id}/banned_users/{banned_user_id}:
     parameters:
@@ -168,6 +177,9 @@ paths:
         '500': 
           $ref: "#/components/responses/server_error"
         
+      security:
+        - bearerAuth: []
+        
          
          
     delete:
@@ -185,6 +197,8 @@ paths:
           
         '500': 
           $ref: "#/components/responses/server_error"
+      security:
+        - bearerAuth: []
         
          
          
@@ -215,6 +229,9 @@ paths:
           
         '500': 
           $ref: "#/components/responses/server_error"
+      
+      security:
+        - bearerAuth: []
         
         
     delete:
@@ -232,6 +249,9 @@ paths:
           
         '500': 
           $ref: "#/components/responses/server_error"
+      
+      security:
+        - bearerAuth: []
         
         
         
@@ -263,6 +283,9 @@ paths:
           
         '500': 
           $ref: "#/components/responses/server_error"
+      
+      security:
+        - bearerAuth: []
           
      
      
@@ -296,6 +319,9 @@ paths:
           
         '500': 
           $ref: "#/components/responses/server_error"
+      
+      security:
+        - bearerAuth: []
     
      
     
@@ -324,6 +350,9 @@ paths:
           
         '500': 
           $ref: "#/components/responses/server_error"
+      
+      security:
+        - bearerAuth: []
         
         
      
@@ -361,6 +390,9 @@ paths:
           
         '500': 
           $ref: "#/components/responses/server_error"
+      
+      security:
+        - bearerAuth: []
         
      
   /users/{id}/photos/{photo_id}/comments/{comment_id}:
@@ -385,6 +417,9 @@ paths:
         '500': 
           $ref: "#/components/responses/server_error"
       
+      security:
+        - bearerAuth: []
+      
       
  
  
@@ -408,6 +443,9 @@ paths:
           
         '500': 
           $ref: "#/components/responses/server_error"
+
+      security:
+        - bearerAuth: []
           
 
     
@@ -427,6 +465,9 @@ paths:
           
         '500': 
           $ref: "#/components/responses/server_error"
+      
+      security:
+        - bearerAuth: []
           
    
   
@@ -436,7 +477,7 @@ paths:
 components :
 
     securitySchemes:
-      bearerAuth:            # arbitrary name for the security scheme
+      bearerAuth:            
         type: http
         scheme: bearer
         bearerFormat: JWT
@@ -502,7 +543,7 @@ components :
             type: string
             minLength: 3
             maxLength: 16
-            pattern: 'ˆ.*?$'
+            pattern: '^.*?$'
       
       
           
@@ -515,7 +556,7 @@ components :
                         type: string
                         minLength: 3 
                         maxLength: 16
-                        pattern: 'ˆ.*?$'
+                        pattern: '^.*?$'
                         example: "Anna2003"
                       
                       nickname: 
@@ -523,7 +564,7 @@ components :
                         type: string
                         minLength: 3 
                         maxLength: 16
-                        pattern: 'ˆ.*?$'
+                        pattern: '^.*?$'
                         example: "Fab003"
         
     
@@ -553,7 +594,7 @@ components :
             type: string
             minLength: 1
             maxLength: 50
-            pattern: 'ˆ.*?$'
+            pattern: '^.*?$'
             description: string value of the comment 
           
           comment_id:
@@ -650,7 +691,6 @@ components :
             items: 
                 $ref: "#/components/schemas/photo"  
                   
-
     
     responses : 
       
@@ -677,3 +717,6 @@ components :
           application/json:
             schema:
               $ref: "#/components/schemas/complete_profile"
+
+
+  
