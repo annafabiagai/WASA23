@@ -48,13 +48,16 @@ paths:
       security:
         - bearerAuth: []
 
-  
+
+########################################
+
   #collection 
   
   /users:
     get:
       tags: ["search"]
-      summary : Look for another user through the identifier given at the login session.
+      summary : |
+        Look for another user through the identifier given at the login session.
       description: |-
         A user can search other user profiles via username only if he/she is not banned.
       operationId: getUser
@@ -62,7 +65,7 @@ paths:
       parameters :
         - name: id
           in: query
-          description: the id of the user that is being searched 
+          description: "the id of the user that is being searched"
           schema:
             description: identifier 
             type: string 
@@ -87,7 +90,8 @@ paths:
       security:
         - bearerAuth: []
           
-     
+
+##########################     
   
   #specific user 
 
@@ -98,8 +102,8 @@ paths:
       
     get:
       tags: ["user"]
-      summary: retrieves all the info of a profile 
-      description: Profile complete info 
+      summary: "retrieves all the info of a profile" 
+      description: "Profile complete info" 
       operationId: getUserProfile
     
       responses:
@@ -126,8 +130,8 @@ paths:
   
     put :
       tags: ["user"]
-      summary: Property of te user of modifying the nickname 
-      description: Modify it's own nickname 
+      summary: "Property of the user of modifying the nickname" 
+      description: "Modify it's own nickname" 
       operationId: setMyUserName
       requestBody:
         content:
@@ -147,7 +151,7 @@ paths:
         - bearerAuth: []
 
         
-      
+#########################    
       
   
   /users/{id}/banned_users/{banned_user_id}:
@@ -155,7 +159,7 @@ paths:
       - $ref: "#/components/parameters/identifier"
       - name: banned_user_id
         in: path 
-        description: User banned identifier == user identifier
+        description: "User banned identifier == user identifier"
         required: true 
         schema: 
           $ref: "#/components/schemas/complete_user/properties/nickname"
@@ -163,7 +167,9 @@ paths:
     put:
       tags: ["ban"]
       summary: User to be banned 
-      description: ban of a user that won't no longer see the profile of the user that blocked him/her
+      description: |
+        ban of a user that won't no longer see the profile of the user that blocked him/her 
+
       operationId: banUser
         
       responses:
@@ -184,8 +190,9 @@ paths:
          
     delete:
       tags: ["ban"]
-      summary: User is no longer banned 
-      description: the user that originaly was banned now is not any more banned and can then see the profile of the user that previously blocked him/her
+      summary: |
+        User is no longer banned 
+      description: "The user that originaly was banned now is not any more banned and can then see the profile of the user that previously blocked him/her"
       operationId: unbanUser
       
       responses:
@@ -201,22 +208,23 @@ paths:
         - bearerAuth: []
         
          
-         
+ ########################
+
          
   /users/{id}/followers/{follower_id}:
     parameters:
       - $ref: "#/components/parameters/identifier"
       - name: follower_id
         in: path
-        description: identifier of a single follower == user identifier 
+        description: "identifier of a single follower == user identifier"
         required: true
         schema:
           $ref: "#/components/schemas/complete_user/properties/nickname"
         
     put:
       tags: ["follower"]
-      summary: follow a peculiar user
-      description: a single user ( that is not banned ) decide to foolow another user 
+      summary: "follow a peculiar user"
+      description: "a single user ( that is not banned ) decide to foolow another user" 
       operationId: followUser
       
       responses:
@@ -236,8 +244,8 @@ paths:
         
     delete:
       tags: ["follower"]
-      summary: unfollowing a peculiar user
-      description: a user decides to stop following another user
+      summary: "unfollowing a peculiar user"
+      description: "a user decides to stop following another user"
       operationId: unfollowUser
       
       responses:
@@ -255,7 +263,7 @@ paths:
         
         
         
- ####### WHERE DO I GET MYY STREAM OF PHOTOS
+ #################### WHERE DO I GET MYY STREAM OF PHOTOS
  
   /users/{id}/home_page:
     parameters:
@@ -263,13 +271,13 @@ paths:
       
     get:
       tags: ['home page']
-      summary: getting the stream of photos 
-      description: view of all the photos from the users that a particular user follows 
+      summary: "getting the stream of photos" 
+      description: "view of all the photos from the users that a particular user follows" 
       operationId: getMyStream
     
       responses :
         '200': 
-          description: it contains the list of all photos from olloing users in a reversed cronological order
+          description: "it contains the list of all photos from olloing users in a reversed cronological order"
           content:
             application/json:
               schema:
@@ -287,7 +295,7 @@ paths:
       security:
         - bearerAuth: []
           
-     
+#####################################   
      
     
   /users/{id}/photos:
@@ -297,15 +305,15 @@ paths:
     
     post:
       tags: ["photo"]
-      summary: upload photo
-      description: uploading a picture
+      summary: "upload photo"
+      description: "uploading a picture"
       operationId: uploadPhoto
       
       
       
       responses:
         '201':  ##HTTP STATUS CDE FOR A CREATION OF A RESOURCE 
-          description: the photo is correcty uploaded 
+          description: "the photo is correcty uploaded" 
           content:
             application/json:
               schema:
@@ -324,7 +332,7 @@ paths:
         - bearerAuth: []
     
      
-    
+################################    
     
     
   /users/{id}/photos/{photo_id}:  
@@ -336,8 +344,8 @@ paths:
      
     delete : 
       tags: [" delete photo"]
-      summary: delete pic
-      description: deletes the content of a user's photo along with likes and comments
+      summary: "delete pic"
+      description: "deletes the content of a user's photo along with likes and comments"
       operationId: deletePhoto
       
       responses:
@@ -355,8 +363,9 @@ paths:
         - bearerAuth: []
         
         
-     
+####################################   
   
+
   /users/{id}/photos/{photo_id}/comments:
     parameters:
       - $ref: '#/components/parameters/identifier'
@@ -364,12 +373,12 @@ paths:
     
     post:
       tags: ["comment"]
-      summary: posting a comment 
-      description: a user posts a comment below its photo or another user photo
+      summary: "posting a comment"
+      description: "a user posts a comment below its photo or another user photo"
       operationId: commentPhoto
       
       requestBody:
-        description: contains the user id of the one that commented and the comment itself
+        description: "contains the user id of the one that commented and the comment itself"
         content:
             application/json:
               schema:
@@ -394,7 +403,12 @@ paths:
       security:
         - bearerAuth: []
         
-     
+
+
+#############################
+
+
+
   /users/{id}/photos/{photo_id}/comments/{comment_id}:
     parameters:
       - $ref: '#/components/parameters/identifier'
@@ -403,8 +417,8 @@ paths:
     
     delete:
       tags: ['comment']
-      summary: deleting a comment 
-      description: removing a comment from it's own post or deleting it's own comment from another user post 
+      summary: "deleting a comment"
+      description: "removing a comment from it's own post or deleting it's own comment from another user post" 
       operationId: uncommentPhoto
       
       responses:
@@ -421,7 +435,7 @@ paths:
         - bearerAuth: []
       
       
- 
+##################################
  
   /users/{id}/photos/{photo_id}/like:
     parameters:
@@ -430,8 +444,8 @@ paths:
     
     put: 
       tags: ["like"]
-      summary: put a like
-      description: user that puts a like on a pic
+      summary: "put a like"
+      description: "user that puts a like on a pic"
       operationId: likePhoto
       
       responses:
@@ -451,8 +465,8 @@ paths:
     
     delete:
       tags: ["like"]
-      summary: unlike a photo 
-      description: user delete a like from a photo
+      summary: "unlike a photo" 
+      description: "user delete a like from a photo"
       operationId: unlikePhoto
   
       responses: 
@@ -470,7 +484,7 @@ paths:
         - bearerAuth: []
           
    
-  
+#####################################  
   
   
   
@@ -484,7 +498,8 @@ components :
 
     
       
-      
+#################################
+     
 
     parameters: 
       
@@ -492,10 +507,10 @@ components :
       identifier: 
         name: id 
         in: path
-        description: unique id for peculiar user 
+        description: "unique id for peculiar user" 
         required: true 
         schema:
-            description: String between 3-16 characters
+            description: "String between 3-16 characters"
             type: string
             pattern: '^.*?$'
             example: Marietto64
@@ -506,10 +521,10 @@ components :
       photo_id:
             name: photo_id
             in: path
-            description: Int64 between 0-9999 , photo unique identifier 
+            description: "Int64 between 0-9999 , photo unique identifier" 
             required: true 
             schema:
-              description: integer identifier 
+              description: "integer identifier" 
               type: integer
               format: int64
               minimum: 0
@@ -527,19 +542,17 @@ components :
           $ref: "#/components/schemas/comment/properties/comment_id"
           
         
-    
+#################################    
     
     
     schemas:
-    
-    
-    
+       
       nickname:
-        description: user's nickname 
+        description: "user's nickname"
         type: object
         properties:
           nickname:
-            description: string representing nickname
+            description: "string representing nickname"
             type: string
             minLength: 3
             maxLength: 16
@@ -548,24 +561,24 @@ components :
       
           
       complete_user: 
-        description: both id and nickname 
+        description: "both id and nickname" 
         type: object 
         properties:
-                      user_id:
-                        description: String between 3-16 characters 
-                        type: string
-                        minLength: 3 
-                        maxLength: 16
-                        pattern: '^.*?$'
-                        example: "Anna2003"
+              user_id:
+                description: String between 3-16 characters 
+                type: string
+                minLength: 3 
+                maxLength: 16
+                pattern: '^.*?$'
+                example: "Anna2003"
                       
-                      nickname: 
-                        description: String between 3-16 characters 
-                        type: string
-                        minLength: 3 
-                        maxLength: 16
-                        pattern: '^.*?$'
-                        example: "Fab003"
+              nickname: 
+                description: String between 3-16 characters 
+                type: string
+                minLength: 3 
+                maxLength: 16
+                pattern: '^.*?$'
+                example: "Fab003"
         
     
       users_list : 
@@ -573,12 +586,12 @@ components :
         type: object 
         properties:
           users:
-                  description: list of users found with partial match nickname
-                  type: array
-                  minItems: 0
-                  maxItems: 10
-                  items: 
-                    $ref: "#/components/schemas/complete_user"
+              description: list of users found with partial match nickname
+              type: array
+              minItems: 0
+              maxItems: 10
+              items: 
+                $ref: "#/components/schemas/complete_user"
       
       comment: 
         description: comment of a user that contains the text and the id of who commented  
@@ -691,7 +704,8 @@ components :
             items: 
                 $ref: "#/components/schemas/photo"  
                   
-    
+##########################
+
     responses : 
       
       user_found:
