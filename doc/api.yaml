@@ -1,19 +1,17 @@
 openapi: 3.0.0
 
-
-info: 
-  description: "WASAphoto: uploading and sharing photos with your friends. API made by 1982464 ."
-  title : WASAphoto
+info:
+  title : WASAphoto 
+  description: |
+    WASAphoto: uploading and sharing photos with your friends. API made by 1982464 .
   version : 1.0.0
-  
-
 
 
 
 paths:
   /session: 
     post:
-      tags: ["Login"]
+      tags: ["login"]
       summary: Logs in the user 
       description: |-
         If the user does not exist, it will be created,
@@ -25,14 +23,8 @@ paths:
         content:
           application/json: 
             schema:
-              type: object 
-              properties:
-                name:
-                  type: string 
-                  example: Maria 
-                  pattern: '^.*?$'
-                  minLength: 3 
-                  maxLength: 16
+             $ref: "#/components/schemas/user_login"
+
         required: true 
       responses:
         '201':
@@ -40,11 +32,8 @@ paths:
           content:
             application/json: 
               schema:
-                type: object 
-                properties:
-                 identifier:
-                    type: string
-                    example: "abcdef012345"
+                $ref: "#/components/schemas/login_return"
+
       security:
         - bearerAuth: []
 
@@ -63,16 +52,7 @@ paths:
       operationId: getUser
       
       parameters :
-        - name: id
-          in: query
-          description: "the id of the user that is being searched"
-          schema:
-            description: identifier 
-            type: string 
-            pattern: '^.*?$' 
-            minLength: 3 
-            maxLength: 16
-            example: "Ann03"
+        - $ref: "#/components/parameters/query_id"
     
       responses:
         '200':
@@ -95,7 +75,6 @@ paths:
   
   #specific user 
 
-
   /users/{id}:
     parameters:
         - $ref: "#/components/parameters/identifier"
@@ -107,10 +86,10 @@ paths:
       operationId: getUserProfile
     
       responses:
+
         '200':
           $ref: "#/components/responses/profile"
           
-        
         '403':
           description: access denied 
           
@@ -125,14 +104,13 @@ paths:
       
       security:
         - bearerAuth: []
-
-   
   
     put :
       tags: ["user"]
       summary: "Property of the user of modifying the nickname" 
       description: "Modify it's own nickname" 
       operationId: setMyUserName
+
       requestBody:
         content:
           application/json:
@@ -157,21 +135,17 @@ paths:
   /users/{id}/banned_users/{banned_user_id}:
     parameters:
       - $ref: "#/components/parameters/identifier"
-      - name: banned_user_id
-        in: path 
-        description: "User banned identifier == user identifier"
-        required: true 
-        schema: 
-          $ref: "#/components/schemas/complete_user/properties/nickname"
+      - $ref: "#/components/parameters/banned_user_id"
         
     put:
       tags: ["ban"]
       summary: User to be banned 
       description: |
         ban of a user that won't no longer see the profile of the user that blocked him/her 
-
+      
       operationId: banUser
-        
+
+
       responses:
       
         '401':
@@ -184,9 +158,7 @@ paths:
           $ref: "#/components/responses/server_error"
         
       security:
-        - bearerAuth: []
-        
-         
+        - bearerAuth: []       
          
     delete:
       tags: ["ban"]
@@ -214,12 +186,7 @@ paths:
   /users/{id}/followers/{follower_id}:
     parameters:
       - $ref: "#/components/parameters/identifier"
-      - name: follower_id
-        in: path
-        description: "identifier of a single follower == user identifier"
-        required: true
-        schema:
-          $ref: "#/components/schemas/complete_user/properties/nickname"
+      - $ref: "#/components/parameters/follower_id"
         
     put:
       tags: ["follower"]
@@ -297,7 +264,6 @@ paths:
           
 #####################################   
      
-    
   /users/{id}/photos:
     parameters:
       - $ref: '#/components/parameters/identifier'
@@ -309,10 +275,15 @@ paths:
       description: "uploading a picture"
       operationId: uploadPhoto
       
-      
+      requestBody:
+        content:
+          image/*: 
+            schema:
+              $ref: "#/components/schemas/raw_photo"
+        required: true 
       
       responses:
-        '201':  ##HTTP STATUS CDE FOR A CREATION OF A RESOURCE 
+        '201':  ##HTTP STATUS CODE FOR A CREATION OF A RESOURCE 
           description: "the photo is correcty uploaded" 
           content:
             application/json:
@@ -333,17 +304,38 @@ paths:
     
      
 ################################    
-    
-    
+     
   /users/{id}/photos/{photo_id}:  
     parameters:
       - $ref: '#/components/parameters/identifier'
       - $ref: '#/components/parameters/photo_id'
       
-     
-     
+
+    get:
+      tags: ["photo"]
+      summary: Downloadsa photo
+      description: user that is not banned can access to its's own picture and to the picture of the owner. 
+      operationId: getPhoto
+
+      responses:
+        '200':
+          $ref: "#/components/responses/photo"
+        
+        '401':
+          $ref: "#/components/responses/unauthorized"
+          
+        '404': 
+          $ref: "#/components/responses/not_found"
+          
+        '500': 
+          $ref: "#/components/responses/server_error"
+
+      security:
+        - bearerAuth: []
+
+
     delete : 
-      tags: [" delete photo"]
+      tags: ["photo"]
       summary: "delete pic"
       description: "deletes the content of a user's photo along with likes and comments"
       operationId: deletePhoto
@@ -365,7 +357,6 @@ paths:
         
 ####################################   
   
-
   /users/{id}/photos/{photo_id}/comments:
     parameters:
       - $ref: '#/components/parameters/identifier'
@@ -382,12 +373,10 @@ paths:
         content:
             application/json:
               schema:
-                $ref: "#/components/schemas/comment"  
-              
+                $ref: "#/components/schemas/comment"         
         required: true 
         
       responses:
-      
         '201':
           description: creation of the comment succesful
           
@@ -437,10 +426,11 @@ paths:
       
 ##################################
  
-  /users/{id}/photos/{photo_id}/like:
+  /users/{id}/photos/{photo_id}/like/{like_id}:
     parameters:
       - $ref: '#/components/parameters/identifier'
       - $ref: '#/components/parameters/photo_id'
+      - $ref: '#/components/parameters/like_id'
     
     put: 
       tags: ["like"]
@@ -460,8 +450,6 @@ paths:
 
       security:
         - bearerAuth: []
-          
-
     
     delete:
       tags: ["like"]
@@ -502,6 +490,17 @@ components :
      
 
     parameters: 
+
+      query_id:
+        name: id
+        in: query
+        description: id of the searched user 
+        schema: 
+          description: identifier 
+          type: string 
+          pattern: '^.*?$'
+          minLength: 3
+          maxLength: 16
       
       
       identifier: 
@@ -517,6 +516,23 @@ components :
             minLength: 3
             maxLength: 16
             readOnly: true
+      
+      banned_user_id:
+        name: banned_user_id
+        in: path
+        description: id of a banned user which corresponds to the id of the user 
+        required: true 
+        schema: 
+          $ref: "#/components/schemas/nickname/properties/nickname"
+
+      follower_id:
+        name: follower_id
+        in: path
+        description: "identifier of a single follower == user identifier"
+        required: true
+        schema:
+          $ref: "#/components/schemas/complete_user/properties/nickname"
+  
     
       photo_id:
             name: photo_id
@@ -540,45 +556,70 @@ components :
         required: true
         schema:
           $ref: "#/components/schemas/comment/properties/comment_id"
+
+      like_id:
+        name: like_id
+        in: path
+        description: like identifier
+        required: true 
+        schema: 
+          $ref: "#/components/schemas/nickname/properties/nickname"
           
         
 #################################    
-    
-    
+     
     schemas:
-       
+
+      user_login: 
+        description: Identifier sent by user during the login
+        type: object 
+        properties:
+          identifier: 
+            $ref: "#/components/schemas/nickname/properties/nickname"
+
+
+      
+      login_return: 
+        description: Identifier returned after the login 
+        type: object
+        properties:
+          identifier:
+            $ref: "#/components/schemas/nickname/properties/nickname"
+
+
+
       nickname:
-        description: "user's nickname"
+        description: User's nickname
         type: object
         properties:
           nickname:
-            description: "string representing nickname"
+            description: String representing nickname
             type: string
             minLength: 3
             maxLength: 16
             pattern: '^.*?$'
       
-      
+      raw_photo:
+        description: Image content 
+        type: object 
+        properties:
+          photo_data:
+            description: raw data of the photo
+            type: string
+            minLength: 0
+            maxLength: 100
+            format: binary 
+
           
       complete_user: 
         description: "both id and nickname" 
         type: object 
         properties:
               user_id:
-                description: String between 3-16 characters 
-                type: string
-                minLength: 3 
-                maxLength: 16
-                pattern: '^.*?$'
-                example: "Anna2003"
+                $ref: "#/components/schemas/nickname/properties/nickname"
                       
               nickname: 
-                description: String between 3-16 characters 
-                type: string
-                minLength: 3 
-                maxLength: 16
-                pattern: '^.*?$'
-                example: "Fab003"
+                $ref: "#/components/schemas/nickname/properties/nickname"
         
     
       users_list : 
@@ -593,15 +634,30 @@ components :
               items: 
                 $ref: "#/components/schemas/complete_user"
       
+
+
+      comment_identifier:
+        description: comment id 
+        type: object 
+        properties:
+          comment_id:
+            description: number 
+            type: integer
+            format: int64
+            minimum: 0
+            maximum: 9999
+            readOnly: true 
+
+
+
       comment: 
         description: comment of a user that contains the text and the id of who commented  
         type: object 
         properties: 
           user_id:
-            $ref: "#/components/schemas/complete_user/properties/user_id"
-                      
+            $ref: "#/components/schemas/nickname/properties/nickname"             
           nickname: 
-            $ref: "#/components/schemas/complete_user/properties/nickname"
+            $ref: "#/components/schemas/nickname/properties/nickname"
             
           comment: 
             type: string
@@ -611,48 +667,43 @@ components :
             description: string value of the comment 
           
           comment_id:
-            type: integer
-            format: int64
-            minimum: 0
-            maximum: 1000
-            readOnly: true
-            
-            
-        
+            $ref: "#/components/schemas/comment_identifier/properties/comment_id"
+
     
        
       photo:
-                      description: Contains the info of a photo
-                      type: object
-                      properties:
-                        comments:
-                          description: array of comments in a single photo
-                          type: array 
-                          minItems: 0
-                          maxItems: 9999
-                          items:
-                            $ref: "#/components/schemas/comment"
+        description: Contains the info of a photo
+        type: object
+        properties:
+          comments:
+            description: array of comments in a single photo
+            type: array 
+            minItems: 0
+            maxItems: 9999
+            items:
+              $ref: "#/components/schemas/comment"
                         
-                        like: 
-                          description: array of users that liked the picture 
-                          type: array 
-                          minItems: 0
-                          maxItems: 999
-                          items: 
-                             $ref: "#/components/schemas/complete_user"
+          like: 
+            description: array of users that liked the picture 
+            type: array 
+            minItems: 0
+            maxItems: 999
+            items: 
+              $ref: "#/components/schemas/complete_user"
                         
-                        date:
-                          description: Date and time of when the pic was uploaded 
-                          type: string 
-                          format: date-time
-                          example: 2023-01-23T13:45:23Z
-                          readOnly: true 
-                          
-                        owner:
-                          $ref: "#/components/schemas/complete_user/properties/nickname"
-                          
-                        photo_id:
-                          $ref: "#/components/parameters/photo_id"
+          date:
+            description: Date and time of when the pic was uploaded 
+            type: string 
+            format: date-time
+            example: 2023-01-23T13:45:23Z
+            readOnly: true 
+          
+          owner:
+            $ref: "#/components/schemas/nickname/properties/nickname"
+
+          photo_id:
+            $ref: "#/components/schemas/comment_identifier/properties/comment_id"
+          #####in dubbio su questa ---> perchè comment id  
                           
       photos: 
         description: list of photos
@@ -674,10 +725,10 @@ components :
         properties:
         
           user_id:
-            $ref: "#/components/schemas/complete_user/properties/user_id"
+            $ref: "#/components/schemas/nickname/properties/nickname"
                       
           nickname: 
-            $ref: "#/components/schemas/complete_user/properties/nickname"
+            $ref: "#/components/schemas/nickname/properties/nickname"
           
           followers:
             description: Array of followers 
@@ -731,6 +782,13 @@ components :
           application/json:
             schema:
               $ref: "#/components/schemas/complete_profile"
+      
+      photo: 
+        description: binary string of the content of the photo
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/raw_photo"
 
 
-  
+
