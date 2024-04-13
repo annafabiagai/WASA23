@@ -74,13 +74,13 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error" 
 
-  /user/{user_id}:    
+  /user/{userid}:    
     parameters:
       - $ref: '#/components/parameters/user_id'
     
     get:
       operationId: getUserProfile
-      tags: [user]   # vedere se modificarlo poi 
+      tags: [user]   
       summary: get user profile 
       description:  get user profile by the unique identifier
 
@@ -131,7 +131,7 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error"
 
-  /user/{nickname}:
+  /user/{username}:
     parameters:
       - $ref: "#/components/parameters/nickname"
 
@@ -313,9 +313,11 @@ paths:
           $ref: '#/components/responses/Forbidden'
         "500":
           $ref: '#/components/responses/Server_error'
+
 ###########    
 #############
-  /user/{id}/home_page:
+
+  /user/{userid}/home_page:
 
     parameters:
       - $ref: '#/components/parameters/user_id'
@@ -464,7 +466,7 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error"
 
-  /photos/{photo_id}/comments/{commentid}:
+  /photos/{photoid}/comments/{commentid}:
     parameters:
       - $ref: '#/components/parameters/photo_id'
       - $ref: '#/components/parameters/comment_id'
@@ -533,13 +535,13 @@ paths:
           description: invalid parameter
 
         '401':
-          $ref: "#/components/responses/unauthorized"
+          $ref: "#/components/responses/Unauthorized"
           
         '404': 
-          $ref: "#/components/responses/not_found"
+          $ref: "#/components/responses/Not_found"
           
         '500': 
-          $ref: "#/components/responses/server_error"
+          $ref: "#/components/responses/Server_error"
  #########     
 
 
@@ -628,10 +630,10 @@ components :
         example: 145
 
       Comment_identifier: #COMMENTID
-            description: identifier of the comment 
-            readOnly: true 
-            type: number
-            format: uint64
+        description: identifier of the comment 
+        readOnly: true 
+        type: number
+        format: uint64
 
       Date:
         description: realease date of a comment or a pic 
@@ -644,7 +646,7 @@ components :
         description: Image encoding 
         type: string
         minLength: 4
-        maxLength: 80000
+        maxLength: 65535
         format: binary 
 
       Comment_text:
@@ -652,8 +654,8 @@ components :
             type: string
             pattern: '^.*?$'
             minLength: 1
-            maxLength: 1000
-            example: nic pic 
+            maxLength: 2200
+            example: nice pic 
             
       Comment: 
         description: comment of a specific User on a specific Photo 
@@ -693,13 +695,13 @@ components :
             description: array of comments in a single photo
             type: array 
             minItems: 0
-            maxItems: 9999
+            maxItems: 99
             items: {$ref: "#/components/schemas/Comment" }                      
           likes: 
             description: array of users that liked the picture 
             type: array 
             minItems: 0
-            maxItems: 999
+            maxItems: 99
             items: { $ref: "#/components/schemas/Complete_user" }                     
           date:
             $ref: "#/components/schemas/Date"
@@ -728,7 +730,7 @@ components :
             description: Array of followers 
             type: array 
             minItems: 0
-            maxItems: 1000
+            maxItems: 100
             items: { $ref: "#/components/schemas/Nickname" }  #### VEDERE POI SE FUNZIONA ( PRIMA ERA COMPLETE_USER)
 
           
@@ -736,7 +738,7 @@ components :
             description: Array of followed users
             type: array 
             minItems: 0
-            maxItems: 1000
+            maxItems: 100
             items: { $ref: "#/components/schemas/Nickname" } 
               
           inBannedList:
@@ -761,7 +763,7 @@ components :
                 
       Unauthorized:
         description: "The user is not logged in"   
-                    ### messa io  
+ 
 
       Not_found:
         description: User not found
@@ -771,8 +773,6 @@ components :
       
       Forbidden:
         description: user in banned list
-
-                  ### messa io 
       
       Profile:
         description: info of the user profile
