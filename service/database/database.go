@@ -52,7 +52,7 @@ type AppDatabase interface {
 
 	SearchUser(nicknameToSearch string) (userList []User, err error)
 
-	GetProfile(ID uint64) (dbProfile Profile, err error)
+	GetUserProfile(ID uint64) (dbProfile Profile, err error)
 
 	GetMyStream(requestingUserID uint64) (stream []Photo, err error)
 

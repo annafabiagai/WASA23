@@ -82,7 +82,7 @@ func (db *appdbimpl) SearchUser(nicknameToSearch string) (userList []User, err e
 	return
 }
 
-func (db *appdbimpl) GetProfile(ID uint64) (dbProfile Profile, err error) {
+func (db *appdbimpl) GetUserProfile(ID uint64) (dbProfile Profile, err error) {
 
 	queries := [5]string{
 		"SELECT nickname FROM user WHERE userID = ?;",

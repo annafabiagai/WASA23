@@ -7,49 +7,43 @@ import (
 // Handler returns an instance of httprouter.Router that handle APIs registered here
 func (rt *_router) Handler() http.Handler {
 
-	rt.router.POST("/session", rt.wrap(rt.doLogin))
+	rt.router.POST("/session", rt.wrap(rt.doLogin)) // OKAY
 
-	rt.router.PUT("/user", rt.wrap(rt.setMyUserName))
+	rt.router.PUT("/user", rt.wrap(rt.setMyUserName)) // OKAY
 
-	rt.router.GET("/users/:userid", rt.wrap(rt.getUserProfile))
+	rt.router.GET("/users/:userid", rt.wrap(rt.getUserProfile)) //OKAY
 
-	rt.router.GET("/users/", rt.wrap(rt.searchUserByUsername))
+	rt.router.GET("/users/", rt.wrap(rt.searchNickname)) //OKAY
 
-	rt.router.GET("/user/:username", rt.wrap(rt.getUserId))
+	rt.router.GET("/user/:nickname", rt.wrap(rt.getIDuser)) //OKAY
 
-	rt.router.PUT("/banned/:userid", rt.wrap(rt.banUser))
+	rt.router.PUT("/banned/:userid", rt.wrap(rt.banUser)) //OKAY
 
-	rt.router.DELETE("/banned/:userid", rt.wrap(rt.unbanUser))
+	rt.router.DELETE("/banned/:userid", rt.wrap(rt.unbanUser)) //OKAY
 
-	rt.router.PUT("/following/:userid", rt.wrap(rt.followUser))
+	rt.router.PUT("/following/:userid", rt.wrap(rt.followUser)) //OKAY
 
-	rt.router.DELETE("/following/:userid", rt.wrap(rt.unfollowUser))
+	rt.router.DELETE("/following/:userid", rt.wrap(rt.unfollowUser)) //OKAY
 
-	rt.router.GET("/users/:userid/followings", rt.wrap(rt.getFollowingsList))
+	rt.router.GET("/users/:userid/followings", rt.wrap(rt.getFollowingsList)) //OKAY
 
-	rt.router.GET("/users/:userid/followers", rt.wrap(rt.getFollowersList))
+	rt.router.GET("/users/:userid/followers", rt.wrap(rt.getFollowersList)) //OKAY
 
-	rt.router.GET("/home_page", rt.wrap(rt.getMyStream))
+	rt.router.GET("/home_page", rt.wrap(rt.getMyStream)) //OKAY
 
-	rt.router.POST("/user/:userid/photos", rt.wrap(rt.uploadPhoto))
+	rt.router.POST("/photos", rt.wrap(rt.uploadPhoto)) //OKAY
 
-	rt.router.GET("/user/:userid/photos/:photoid", rt.wrap(rt.getPhoto))
+	rt.router.DELETE("/user/:userid/photos/:photoid", rt.wrap(rt.deletePhoto)) //OKAY
 
-	rt.router.DELETE("/user/:userid/photos/:photoid", rt.wrap(rt.deletePhoto))
+	rt.router.POST("/photos/:photoid/comments/", rt.wrap(rt.commentPhoto)) //OKAY
 
-	rt.router.POST("/photos/:photoid/comments/", rt.wrap(rt.commentPhoto))
+	rt.router.DELETE("/photos/:photoid/comments/:commentid", rt.wrap(rt.uncommentPhoto)) //OKAY
 
-	rt.router.DELETE("/photos/:photoid/comments/:commentid", rt.wrap(rt.uncommentPhoto))
+	rt.router.GET("/users/:userid/photos/", rt.wrap(rt.getPhotosList)) //OKAY
 
-	rt.router.GET("/photos/:photoid/comments/", rt.wrap(rt.getCommentsList))
+	rt.router.PUT("/like/:photoid", rt.wrap(rt.likePhoto)) //OKAY
 
-	rt.router.GET("/user/:userid/photos", rt.wrap(rt.getPhotosList))
-
-	rt.router.PUT("/like/:photoid", rt.wrap(rt.likePhoto))
-
-	rt.router.DELETE("/like/:photoid", rt.wrap(rt.unlikePhoto))
-
-	///  NON HO IL PATH PER LIKE LIST
+	rt.router.DELETE("/like/:photoid", rt.wrap(rt.unlikePhoto)) //OKAY
 
 	// Special routes
 	rt.router.GET("/liveness", rt.liveness)

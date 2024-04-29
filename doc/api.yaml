@@ -6,10 +6,10 @@ info:
     WASAphoto: uploading and sharing photos with your friends. API made by 1982464 .
   version : 0.0.1
 
-########## CONTROLLARE TUTTI I TAGS PERCHÈ NON HANNO SENSO 
+
 
 paths:
-  /session: 
+  /session: #####OKAY 
 
     post:
       operationId: doLogin 
@@ -46,7 +46,7 @@ paths:
           # Internal Server Error
           $ref: '#/components/responses/Server_error'
 
-  /user:
+  /user: ######OKAY
     put: 
       operationId: setMyUserName
       tags: [user]
@@ -74,7 +74,7 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error" 
 
-  /users/{userid}:    
+  /users/{userid}: #####OKAY   
     parameters:
       - $ref: '#/components/parameters/user_id'
     
@@ -100,7 +100,7 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error"
 
-  /users/:
+  /users/: ####OKAY
     get:
       operationId: searchNickname 
       tags: ["search"]
@@ -131,7 +131,7 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error"
 
-  /user/{nickname}:
+  /user/{nickname}: ###OKAY
     parameters:
       - $ref: "#/components/parameters/nickname"
 
@@ -157,7 +157,7 @@ paths:
           $ref: "#/components/responses/Server_error"
    
 
-  /banned/{userid}:
+  /banned/{userid}: ###OKAY
     parameters:
       - $ref: "#/components/parameters/user_id"
 
@@ -204,7 +204,7 @@ paths:
 
 
 ############           
-  /following/{userid}:
+  /following/{userid}: ####OKAY
     parameters:
       - $ref: "#/components/parameters/user_id"  
         
@@ -254,7 +254,7 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error"
  
-  /users/{userid}/followers/:
+  /users/{userid}/followers/: ###OKAY
     parameters:
      - $ref: '#/components/parameters/user_id'
 
@@ -284,7 +284,7 @@ paths:
         "500":
           $ref: '#/components/responses/Server_error'
 
-  /users/{userid}/followings/:
+  /users/{userid}/followings/  : ###OKAY
     parameters:
       - $ref: '#/components/parameters/user_id'
 
@@ -317,7 +317,7 @@ paths:
 ###########    
 #############
 
-  /home_page:  
+  /home_page: ###OKAY 
       
     get:
       operationId: getMyStream
@@ -343,10 +343,7 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error"
 
-  /user/{userid}/photos:
-
-    parameters:
-      - $ref: '#/components/parameters/user_id'
+  /photos: ###OKAY
 
     post:
       operationId: uploadPhoto
@@ -376,36 +373,11 @@ paths:
         "500":
           $ref: '#/components/responses/Server_error'
      
-  /users/{userid}/photos/{photoid}:  
+  /photos/{photoid} : ####OKAY  
     parameters:
-      - $ref: '#/components/parameters/user_id'
       - $ref: '#/components/parameters/photo_id'
       
-
-    get:
-      operationId: getPhoto
-      tags: ["photo"]
-      summary: Downloads a photo
-      description: user accesses its specific photo or other peculiar photo
       
-
-      responses:
-        '200':
-          description: specific photo for a specific user retrieved
-          content:
-            image/*:
-              schema: { $ref: "#/components/schemas/Raw_photo" }
-
-        '400':
-          description: invalid parameters 
-
-        '401':
-          $ref: "#/components/responses/Unauthorized"
-          
-          
-        '500': 
-          $ref: "#/components/responses/Server_error"
-
     delete:
       operationId: deletePhoto
       tags: [photo]
@@ -429,7 +401,7 @@ paths:
 ############
 
 ###### 
-  /photos/{photoid}/comments/:
+  /photos/{photoid}/comments/: ####OKAY
     parameters:
       - $ref: '#/components/parameters/photo_id'
     
@@ -463,7 +435,7 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error"
 
-  /photos/{photoid}/comments/{commentid}:
+  /photos/{photoid}/comments/{commentid}: ####OKAY
     parameters:
       - $ref: '#/components/parameters/photo_id'
       - $ref: '#/components/parameters/comment_id'
@@ -492,7 +464,7 @@ paths:
 #######
 
  ###########     
-  /like/{photoid}:
+  /like/{photoid}: ###OKAY
     parameters:
       - $ref: '#/components/parameters/photo_id'
 
@@ -539,8 +511,45 @@ paths:
           
         '500': 
           $ref: "#/components/responses/Server_error"
- #########     
 
+ ######   
+
+  /users/{userid}/photos/: ###OKAY
+
+    parameters:
+      - $ref: "#/components/parameters/user_id"
+
+    get:
+      operationId: getPhotosList
+      tags: [getters]
+      summary: get user photos
+      description: Get the list of photos uploaded by a user.
+      responses:
+        "200":
+          # OK
+          description: List of user photos retrieved successfully.
+          content:
+            application/json:
+              schema:
+                description: Photos list.
+                type: array
+                minItems: 0
+                maxItems: 99
+                items: { $ref: '#/components/schemas/Photo' }
+        "400":
+          # Bad Request
+          description: |-
+            Invalid path parameter uid or;
+            uid not matching any existing user.
+        "401":
+          # Unauthorized
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          # Forbidden
+          $ref: '#/components/responses/Forbidden'
+        "500":
+          # Internal Server Error
+          $ref: '#/components/responses/Server_error'
 
      
 components :
@@ -723,21 +732,28 @@ components :
             type: number
             format: uint64
 
-          followers:
-            description: Array of followers 
-            type: array 
-            minItems: 0
-            maxItems: 100
-            items: { $ref: "#/components/schemas/Nickname" }  #### VEDERE POI SE FUNZIONA ( PRIMA ERA COMPLETE_USER)
-
+          followersCount:
+            description: Total number of followers.
+            type: number
+            format: uint64
+            example: 53
           
-          following:
-            description: Array of followed users
-            type: array 
-            minItems: 0
-            maxItems: 100
-            items: { $ref: "#/components/schemas/Nickname" } 
-              
+          followingCount:
+            description: Total number of following.
+            type: number
+            format: uint64
+            example: 53
+          
+          isItMe:
+            description: Is it me.
+            type: boolean
+            example: true
+          
+          doIFollowUser:
+            description: Do I follow user.
+            type: boolean
+            example: true
+
           inBannedList:
             description: user is in the banned list 
             type: boolean
@@ -747,13 +763,7 @@ components :
             type: boolean 
 
                     ##### aggiunta mia: nel profilo compelto voglio far vedere anche le foto 
-          photos:
-            description: Array of photos 
-            type: array
-            minItems: 0
-            maxItems: 50 
-            items: { $ref: "#/components/schemas/Photo" }
-
+          
 #################################    
 
   responses : 

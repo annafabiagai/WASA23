@@ -85,7 +85,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	requestedProfile.MeBanned = isBanned
 
 	// database section
-	dbProfile, err := rt.db.GetProfile(requestedUser.ID)
+	dbProfile, err := rt.db.GetUserProfile(requestedUser.ID)
 	requestedProfile.FromDatabase(dbProfile)
 
 	// InternalServerError check

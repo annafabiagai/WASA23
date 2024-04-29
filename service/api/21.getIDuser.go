@@ -9,14 +9,14 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func (rt *_router) getUserId(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+func (rt *_router) getIDuser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	var token uint64
 	token, err := strconv.ParseUint(r.Header.Get("Authorization"), 10, 64)
 
 	// Unauthorized check
 	if err != nil {
-		stringErr := "getUserId: invalid authorization token"
+		stringErr := "getIDuser: invalid authorization token"
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
@@ -26,7 +26,7 @@ func (rt *_router) getUserId(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 	if !present {
-		stringErr := "getUserId: authorization token not matching any existing user"
+		stringErr := "getIDuser: authorization token not matching any existing user"
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
@@ -35,7 +35,7 @@ func (rt *_router) getUserId(w http.ResponseWriter, r *http.Request, ps httprout
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "getUserId: invalid path parameter username"
+		stringErr := "getIDuser: invalid path parameter username"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
