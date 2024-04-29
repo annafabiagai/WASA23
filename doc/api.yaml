@@ -74,7 +74,7 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error" 
 
-  /user/{userid}:    
+  /users/{userid}:    
     parameters:
       - $ref: '#/components/parameters/user_id'
     
@@ -131,7 +131,7 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error"
 
-  /user/{username}:
+  /user/{nickname}:
     parameters:
       - $ref: "#/components/parameters/nickname"
 
@@ -317,10 +317,7 @@ paths:
 ###########    
 #############
 
-  /user/{userid}/home_page:
-
-    parameters:
-      - $ref: '#/components/parameters/user_id'
+  /home_page:  
       
     get:
       operationId: getMyStream
@@ -578,7 +575,7 @@ components :
           $ref: "#/components/schemas/Photo_id"
 
       nickname:
-        name: username 
+        name: nickname 
         in: path
         required: true 
         description: nickname of a specific user_id 

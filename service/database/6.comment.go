@@ -1,5 +1,7 @@
 package database
 
+import "database/sql"
+
 func (db *appdbimpl) CommentPhoto(comment Comment) (dbComment Comment, err error) {
 
 	query := "INSERT INTO comment (photoID, ownerID, nickname, commentText, date) VALUES (?,?,?,?,?);"
@@ -20,6 +22,24 @@ func (db *appdbimpl) UncommentPhoto(ID uint64) (err error) {
 
 	_, err = db.c.Exec(query, ID)
 	return
+}
+
+func (db *appdbimpl) SearchCommentByID(ID uint64) (dbComment Comment, present bool, err error) {
+
+	query := "SELECT * FROM comments WHERE commentID = ?;"
+
+	row := db.c.QueryRow(query, ID)
+	err = row.Scan(&dbComment.ID, &dbComment.PhotoID, &dbComment.OwnerID, &dbComment.Nickname, &dbComment.Text, &dbComment.Date)
+	if err != nil && err != sql.ErrNoRows {
+		return
+	} else if err == sql.ErrNoRows {
+		err = nil
+		return
+	} else {
+		err = nil
+		present = true
+		return
+	}
 }
 
 func (db *appdbimpl) GetCommentsList(photoID uint64) (commentsList []Comment, err error) {

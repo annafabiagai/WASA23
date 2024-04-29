@@ -102,6 +102,8 @@ type AppDatabase interface {
 
 	/// COMMENT TABLE
 
+	SearchCommentByID(ID uint64) (dbComment Comment, present bool, err error)
+
 	CommentPhoto(comment Comment) (dbComment Comment, err error)
 
 	UncommentPhoto(ID uint64) (err error)

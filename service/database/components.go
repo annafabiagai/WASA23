@@ -25,12 +25,14 @@ type Comment struct {
 }
 
 type Profile struct {
-	Nickname     string  `json:"nickname"`
-	LikesCount   uint64  `json:"likesCount"`
-	PhotosCount  uint64  `json:"photosCount"`
-	Followers    []User  `json:"followersList"`
-	Followings   []User  `json:"followingsList"`
-	InBannedList bool    `json:"inMyBannedList"`
-	MeBanned     bool    `json:"meBanned"`
-	Photos       []Photo `json:"photoList"`
+	Nickname      string  `json:"nickname"`
+	LikesCount    uint64  `json:"likesCount"`
+	PhotosCount   uint64  `json:"photosCount"`
+	Followers     []User  `json:"followersList"`
+	Followings    []User  `json:"followingsList"`
+	InBannedList  bool    `json:"inMyBannedList"`
+	MeBanned      bool    `json:"meBanned"`
+	IsItMe        bool    `json:"isItMe"`
+	DoIFollowUser bool    `json:"doIFollowUser"`
+	Photos        []Photo `json:"photoList"`
 }
