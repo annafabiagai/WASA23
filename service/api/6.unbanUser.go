@@ -1,5 +1,10 @@
 package api
 
+/*
+go run ./cmd/webapi/
+curl -X DELETE -H 'Authorization: 1' localhost:3000/banned/2
+*/
+
 import (
 	"net/http"
 	"strconv"
@@ -31,11 +36,11 @@ func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	var pathUid uint64
-	pathUid, err = strconv.ParseUint(ps.ByName("uid"), 10, 64)
+	pathUid, err = strconv.ParseUint(ps.ByName("userid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "unbanUser: invalid path parameter uid"
+		stringErr := "unbanUser: invalid path parameter user id"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}

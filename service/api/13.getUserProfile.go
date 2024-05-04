@@ -2,10 +2,7 @@ package api
 
 /*
 go run ./cmd/webapi/
-curl -v \
-	-X GET \
-	-H 'Authorization: 1' \
-	localhost:3000/users/{1}/
+curl -X GET -H 'Authorization: 1' localhost:3000/users/1
 */
 
 import (
@@ -40,11 +37,11 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	var pathUid uint64
-	pathUid, err = strconv.ParseUint(ps.ByName("uid"), 10, 64)
+	pathUid, err = strconv.ParseUint(ps.ByName("userid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "getUserProfile: invalid path parameter uid"
+		stringErr := "getUserProfile: invalid path parameter user id"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
@@ -54,7 +51,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 	if !present {
-		stringErr := "getUserProfile: path parameter uid not matching any existing user"
+		stringErr := "getUserProfile: path parameter user id not matching any existing user"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}

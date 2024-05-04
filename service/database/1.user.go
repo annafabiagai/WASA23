@@ -116,8 +116,8 @@ func (db *appdbimpl) GetUserProfile(ID uint64) (dbProfile Profile, err error) {
 func (db *appdbimpl) GetMyStream(requestingUserID uint64) (stream []Photo, err error) {
 
 	query := `
-		SELECT photoID, ownerID, format, date FROM photos
-		INNER JOIN following ON ownerID = followedID
+		SELECT photoID, ownerID, format, date FROM photo
+		INNER JOIN follow ON ownerID = followedID
 		WHERE followerID = ?
 		ORDER BY date DESC
 		LIMIT 50;`

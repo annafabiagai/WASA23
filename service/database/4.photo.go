@@ -26,7 +26,7 @@ func (db *appdbimpl) DeletePhoto(ID uint64) (err error) {
 
 func (db *appdbimpl) GetPhotoByID(ID uint64) (dbPhoto Photo, present bool, err error) {
 
-	query := "SELECT * FROM photos WHERE photoID = ?;"
+	query := "SELECT * FROM photo WHERE photoID = ?;"
 
 	row := db.c.QueryRow(query, ID)
 	err = row.Scan(&dbPhoto.ID, &dbPhoto.OwnerID, &dbPhoto.Format, &dbPhoto.Date)
@@ -44,7 +44,7 @@ func (db *appdbimpl) GetPhotoByID(ID uint64) (dbPhoto Photo, present bool, err e
 
 func (db *appdbimpl) GetPhotosList(ownerID uint64) (photosList []Photo, err error) {
 
-	query := "SELECT * FROM photo WHERE authorID = ? ORDER BY date DESC;"
+	query := "SELECT * FROM photo WHERE ownerID = ? ORDER BY date DESC;"
 
 	rows, err := db.c.Query(query, ownerID)
 	if err != nil {

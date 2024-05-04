@@ -2,10 +2,7 @@ package api
 
 /*
 go run ./cmd/webapi/
-curl -v \
-	-X GET \
-	-H 'Authorization: 1' \
-	localhost:3000/users/{1}/photos/
+ curl -X GET -H 'Authorization: 1' localhost:3000/users/1/photos/
 */
 
 import (
@@ -40,11 +37,11 @@ func (rt *_router) getPhotosList(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	var pathUid uint64
-	pathUid, err = strconv.ParseUint(ps.ByName("uid"), 10, 64)
+	pathUid, err = strconv.ParseUint(ps.ByName("userid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "getPhotosList: invalid path parameter uid"
+		stringErr := "getPhotosList: invalid path parameter user id"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
@@ -54,7 +51,7 @@ func (rt *_router) getPhotosList(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 	if !present {
-		stringErr := "getPhotosList: path parameter uid not matching any existing user"
+		stringErr := "getPhotosList: path parameter user id not matching any existing user"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}

@@ -39,11 +39,11 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	var pathPid uint64
-	pathPid, err = strconv.ParseUint(ps.ByName("pid"), 10, 64)
+	pathPid, err = strconv.ParseUint(ps.ByName("photoid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "unlikePhoto: invalid path parameter pid"
+		stringErr := "unlikePhoto: invalid path parameter photo id"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}

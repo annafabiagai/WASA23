@@ -8,8 +8,8 @@ type Profile struct {
 	Nickname      string           `json:"nickname"`
 	LikesCount    uint64           `json:"likesCount"`
 	PhotosCount   uint64           `json:"photosCount"`
-	Followers     []database.User  `json:"followersList"`
-	Followings    []database.User  `json:"followingsList"`
+	Followers     uint64           `json:"followersList"`
+	Followings    uint64           `json:"followingsList"`
 	InBannedList  bool             `json:"inMyBannedList"`
 	MeBanned      bool             `json:"meBanned"`
 	IsItMe        bool             `json:"isItMe"`

@@ -9,7 +9,7 @@ import (
 
 type User struct {
 	ID       uint64 `json:"IDuser"`
-	Nickname string `json:"nickname"`
+	Nickname string `json:"Nickname"`
 }
 
 func (u *User) HasValidUsername() bool {

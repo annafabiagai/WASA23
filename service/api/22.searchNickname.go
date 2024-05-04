@@ -1,5 +1,10 @@
 package api
 
+/*
+go run ./cmd/webapi/
+curl -X GET -H 'Authorization: 1' "localhost:3000/users/?nickname=Anna"
+*/
+
 import (
 	"encoding/json"
 	"net/http"
@@ -31,9 +36,9 @@ func (rt *_router) searchNickname(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	usernameToSearch := r.URL.Query().Get("username")
+	usernameToSearch := r.URL.Query().Get("nickname")
 
-	// database section
+	// database sections
 	usersList, err := rt.db.SearchUser(usernameToSearch)
 
 	// InternalServerError check

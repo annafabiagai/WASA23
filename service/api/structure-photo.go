@@ -39,16 +39,16 @@ func (p *Photo) FromDatabase(photo database.Photo) {
 
 func (p *Photo) ToAlbum() album.Photo {
 	return album.Photo{
-		ID:       p.ID,
-		AuthorID: p.OwnerID,
-		Format:   p.Format,
-		Date:     p.Date,
+		ID:      p.ID,
+		OwnerID: p.OwnerID,
+		Format:  p.Format,
+		Date:    p.Date,
 	}
 }
 
 func (p *Photo) FromAlbum(photo album.Photo) {
 	p.ID = photo.ID
-	p.OwnerID = photo.AuthorID
+	p.OwnerID = photo.OwnerID
 	p.Format = photo.Format
 	p.Date = photo.Date
 }

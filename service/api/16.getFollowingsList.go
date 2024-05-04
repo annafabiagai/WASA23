@@ -2,10 +2,7 @@ package api
 
 /*
 go run ./cmd/webapi/
-curl -v \
-	-X GET \
-	-H 'Authorization: 1' \
-	localhost:3000/users/{1}/followings/
+curl -X GET -H 'Authorization: 1' localhost:3000/users/1/followings
 */
 
 import (
@@ -40,11 +37,11 @@ func (rt *_router) getFollowingsList(w http.ResponseWriter, r *http.Request, ps 
 	}
 
 	var pathUid uint64
-	pathUid, err = strconv.ParseUint(ps.ByName("uid"), 10, 64)
+	pathUid, err = strconv.ParseUint(ps.ByName("userid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "getFollowingsList: invalid path parameter uid"
+		stringErr := "getFollowingsList: invalid path parameter user id"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}

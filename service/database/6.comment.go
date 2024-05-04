@@ -26,7 +26,7 @@ func (db *appdbimpl) UncommentPhoto(ID uint64) (err error) {
 
 func (db *appdbimpl) SearchCommentByID(ID uint64) (dbComment Comment, present bool, err error) {
 
-	query := "SELECT * FROM comments WHERE commentID = ?;"
+	query := "SELECT * FROM comment WHERE commentID = ?;"
 
 	row := db.c.QueryRow(query, ID)
 	err = row.Scan(&dbComment.ID, &dbComment.PhotoID, &dbComment.OwnerID, &dbComment.Nickname, &dbComment.Text, &dbComment.Date)

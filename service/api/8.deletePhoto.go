@@ -2,10 +2,7 @@ package api
 
 /*
 go run ./cmd/webapi/
-curl -v \
-	-X DELETE \
-	-H 'Authorization: 1' \
-	localhost:3000/photos/{1}/
+curl -X DELETE -H 'Authorization: 4' localhost:3000/photos/2
 */
 
 import (
@@ -40,7 +37,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	var pathPid uint64
-	pathPid, err = strconv.ParseUint(ps.ByName("pid"), 10, 64)
+	pathPid, err = strconv.ParseUint(ps.ByName("photoid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {

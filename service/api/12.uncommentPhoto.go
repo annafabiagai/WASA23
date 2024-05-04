@@ -39,11 +39,11 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	var pathPid uint64
-	pathPid, err = strconv.ParseUint(ps.ByName("pid"), 10, 64)
+	pathPid, err = strconv.ParseUint(ps.ByName("photoid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "uncommentPhoto: invalid path parameter pid"
+		stringErr := "uncommentPhoto: invalid path parameter photoid"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
@@ -53,17 +53,17 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 	if !present {
-		stringErr := "uncommentPhoto: path parameter pid not matching any existing photo"
+		stringErr := "uncommentPhoto: path parameter photoid not matching any existing photo"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
 
 	var pathCid uint64
-	pathCid, err = strconv.ParseUint(ps.ByName("cid"), 10, 64)
+	pathCid, err = strconv.ParseUint(ps.ByName("commentid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "uncommentPhoto: invalid path parameter cid"
+		stringErr := "uncommentPhoto: invalid path parameter comment id"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
@@ -73,7 +73,7 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 	if !present {
-		stringErr := "uncommentPhoto: path parameter cid not matching any existing comment"
+		stringErr := "uncommentPhoto: path parameter comment id not matching any existing comment"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}

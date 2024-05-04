@@ -2,10 +2,7 @@ package api
 
 /*
 go run ./cmd/webapi/
-curl -v \
-	-X PUT \
-	-H 'Authorization: 1' \
-	localhost:3000/likes/{1}
+curl -X PUT -H 'Authorization: 2' localhost:3000/like/1
 */
 
 import (
@@ -39,11 +36,11 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	var pathPid uint64
-	pathPid, err = strconv.ParseUint(ps.ByName("pid"), 10, 64)
+	pathPid, err = strconv.ParseUint(ps.ByName("photoid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "likePhoto: invalid path parameter pid"
+		stringErr := "likePhoto: invalid path parameter photo id"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}

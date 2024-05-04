@@ -13,9 +13,9 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.GET("/users/:userid", rt.wrap(rt.getUserProfile)) //OKAY
 
-	rt.router.GET("/users/", rt.wrap(rt.searchNickname)) //OKAY
+	rt.router.GET("/users/", rt.wrap(rt.searchNickname))
 
-	rt.router.GET("/user/:nickname", rt.wrap(rt.getIDuser)) //OKAY
+	rt.router.GET("/user/:nickname", rt.wrap(rt.getIDuser))
 
 	rt.router.PUT("/banned/:userid", rt.wrap(rt.banUser)) //OKAY
 
@@ -25,15 +25,15 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.DELETE("/following/:userid", rt.wrap(rt.unfollowUser)) //OKAY
 
-	rt.router.GET("/users/:userid/followings", rt.wrap(rt.getFollowingsList)) //OKAY
+	rt.router.GET("/users/:userid/followings", rt.wrap(rt.getFollowingsList))
 
 	rt.router.GET("/users/:userid/followers", rt.wrap(rt.getFollowersList)) //OKAY
 
-	rt.router.GET("/home_page", rt.wrap(rt.getMyStream)) //OKAY
+	rt.router.GET("/home_page", rt.wrap(rt.getMyStream))
 
 	rt.router.POST("/photos", rt.wrap(rt.uploadPhoto)) //OKAY
 
-	rt.router.DELETE("/user/:userid/photos/:photoid", rt.wrap(rt.deletePhoto)) //OKAY
+	rt.router.DELETE("/photos/:photoid", rt.wrap(rt.deletePhoto)) //OKAY
 
 	rt.router.POST("/photos/:photoid/comments/", rt.wrap(rt.commentPhoto)) //OKAY
 

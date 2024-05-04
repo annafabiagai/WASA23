@@ -1,5 +1,10 @@
 package api
 
+/*
+go run ./cmd/webapi/
+curl -X GET -H 'Authorization: 1' localhost:3000/user/Anna
+*/
+
 import (
 	"encoding/json"
 	"net/http"
@@ -31,11 +36,11 @@ func (rt *_router) getIDuser(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
-	username := ps.ByName("username")
+	username := ps.ByName("nickname")
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "getIDuser: invalid path parameter username"
+		stringErr := "getIDuser: invalid path parameter nickname"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}

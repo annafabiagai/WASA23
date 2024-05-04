@@ -1,5 +1,10 @@
 package api
 
+/*
+go run ./cmd/webapi/
+curl -X PUT -H 'Authorization: 1' -H 'Content-Type: application/json' -d '{"nickname": "annina"}' localhost:3000/user
+*/
+
 import (
 	"encoding/json"
 	"net/http"
@@ -10,7 +15,7 @@ import (
 )
 
 func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	var token uint64
+	var token uint64 // ID DELLO USER
 	token, err := strconv.ParseUint(r.Header.Get("Authorization"), 10, 64)
 
 	// Unauthorized check
@@ -24,15 +29,15 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if !present {
+	if !present { //Checks if the user corresponding to the provided token exists in the database.
 		stringErr := "setMyUserName: authorization token not matching any existing user"
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
 
-	var updatedUser User
-	updatedUser.FromDatabase(dbUser)
-	err = json.NewDecoder(r.Body).Decode(&updatedUser)
+	var updatedUser User                               // Declares a variable updatedUser of type User. This variable will store the updated user data.
+	updatedUser.FromDatabase(dbUser)                   //Populates the updatedUser struct with the user data retrieved from the database.
+	err = json.NewDecoder(r.Body).Decode(&updatedUser) // Decodes the JSON data from the request body into the updatedUser variable
 
 	// BadRequest check
 	if err != nil {
@@ -45,7 +50,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
-	_, present, err = rt.db.GetUserByNickname(updatedUser.Nickname)
+	_, present, err = rt.db.GetUserByNickname(updatedUser.Nickname) //: Checks if the provided nickname already exists in the database.
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -59,7 +64,6 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	// database section
 	err = rt.db.SetMyNickname(updatedUser.ToDatabase())
 
-	// InternalServerError check
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

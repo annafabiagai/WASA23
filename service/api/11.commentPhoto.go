@@ -2,12 +2,7 @@ package api
 
 /*
 go run ./cmd/webapi/
-curl -v \
-	-X POST \
-	-H 'Content-Type: text/plain' \
-	-H 'Authorization: 1' \
-	-d "da lillo" \
-	localhost:3000/photos/{1}/comments/
+curl -X POST -H 'Content-Type: text/plain' -H 'Authorization: 2' -d "che figata" http://localhost:3000/photos/3/comments/
 */
 
 import (
@@ -44,11 +39,11 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	var pathPid uint64
-	pathPid, err = strconv.ParseUint(ps.ByName("pid"), 10, 64)
+	pathPid, err = strconv.ParseUint(ps.ByName("photoid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "commentPhoto: invalid path parameter pid"
+		stringErr := "commentPhoto: invalid path parameter photoid"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
@@ -58,7 +53,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 	if !present {
-		stringErr := "commentPhoto: path parameter pid not matching any existing photo"
+		stringErr := "commentPhoto: path parameter photo id not matching any existing photo"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}

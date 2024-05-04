@@ -1,5 +1,10 @@
 package api
 
+/*
+go run ./cmd/webapi/
+curl  -X PUT -H 'Authorization: 1' localhost:3000/following/2
+*/
+
 import (
 	"net/http"
 	"strconv"
@@ -31,11 +36,11 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 	}
 
 	var pathUid uint64
-	pathUid, err = strconv.ParseUint(ps.ByName("uid"), 10, 64)
+	pathUid, err = strconv.ParseUint(ps.ByName("userid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "followUser: invalid path parameter uid"
+		stringErr := "followUser: invalid path parameter user id"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
@@ -45,7 +50,7 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 	if !present {
-		stringErr := "followUser: path parameter uid not matching any existing user"
+		stringErr := "followUser: path parameter user id not matching any existing user"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
