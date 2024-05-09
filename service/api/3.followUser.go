@@ -1,10 +1,5 @@
 package api
 
-/*
-go run ./cmd/webapi/
-curl  -X PUT -H 'Authorization: 1' localhost:3000/following/2
-*/
-
 import (
 	"net/http"
 	"strconv"

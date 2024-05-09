@@ -56,7 +56,7 @@ type AppDatabase interface {
 
 	GetMyStream(requestingUserID uint64) (stream []Photo, err error)
 
-	/// FOLLOW TABLE
+	// FOLLOW TABLE
 
 	FollowUser(followerID uint64, followedID uint64) (err error)
 
@@ -80,7 +80,7 @@ type AppDatabase interface {
 
 	CascadeBanBothDirections(user1ID uint64, user2ID uint64) (err error)
 
-	/// PHOTO TABLE
+	// PHOTO TABLE
 
 	CreatePhoto(photo Photo) (dbPhoto Photo, err error)
 
@@ -90,7 +90,7 @@ type AppDatabase interface {
 
 	GetPhotosList(ownerID uint64) (photosList []Photo, err error)
 
-	/// LIKE TABLE
+	// LIKE TABLE
 
 	LikePhoto(likerID uint64, photoID uint64) (err error)
 
@@ -100,7 +100,7 @@ type AppDatabase interface {
 
 	RemoveLikesBothDirections(user1ID uint64, user2ID uint64) (err error)
 
-	/// COMMENT TABLE
+	// COMMENT TABLE
 
 	SearchCommentByID(ID uint64) (dbComment Comment, present bool, err error)
 
@@ -126,7 +126,7 @@ func New(db *sql.DB) (AppDatabase, error) {
 		return nil, errors.New("database is required when building a AppDatabase")
 	}
 
-	// Check if table exists. If not, the database is empty, and we need to create the structure
+	//  Check if table exists. If not, the database is empty, and we need to create the structure
 	var tableName string
 	err := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='example_table';`).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {

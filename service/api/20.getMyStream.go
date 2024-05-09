@@ -1,12 +1,5 @@
 package api
 
-/*
-go run ./cmd/webapi/
-curl -X GET -H 'Authorization: 1' localhost:3000/home_pagecurl -X GET -H 'Authorization: 1' localhost:3000/home_page
-
-non funziona: RITORNA SEMPRE NULL
-*/
-
 import (
 	"encoding/json"
 	"net/http"

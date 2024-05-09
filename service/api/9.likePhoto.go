@@ -1,10 +1,5 @@
 package api
 
-/*
-go run ./cmd/webapi/
-curl -X PUT -H 'Authorization: 2' localhost:3000/like/1
-*/
-
 import (
 	"net/http"
 	"strconv"

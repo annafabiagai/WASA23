@@ -1,10 +1,5 @@
 package api
 
-/*
-go run ./cmd/webapi/
-curl -X GET -H 'Authorization: 1' localhost:3000/users/1/followings
-*/
-
 import (
 	"encoding/json"
 	"net/http"

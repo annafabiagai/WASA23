@@ -1,13 +1,5 @@
 package api
 
-/*
-go run ./cmd/webapi/
-curl -v \
-	-X DELETE \
-	-H 'Authorization: 5' \
-	localhost:3000/likes/{6}
-*/
-
 import (
 	"net/http"
 	"strconv"
@@ -57,6 +49,7 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
+
 	// delete doesn't raise error if record not present
 
 	// database section

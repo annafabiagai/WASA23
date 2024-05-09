@@ -1,10 +1,5 @@
 package api
 
-/*
-go run ./cmd/webapi/
-curl -X POST -H 'Authorization: 4' -H 'Content-Type: image/*' --data-binary "@./photo-album/yellow_snake.jpg" localhost:3000/photos
-*/
-
 import (
 	"encoding/json"
 	"io"

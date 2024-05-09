@@ -1,10 +1,5 @@
 package api
 
-/*
-go run ./cmd/webapi/
-curl -X DELETE -H 'Authorization: 1' localhost:3000/banned/2
-*/
-
 import (
 	"net/http"
 	"strconv"

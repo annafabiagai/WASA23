@@ -1,10 +1,5 @@
 package api
 
-/*
-go run ./cmd/webapi/
-curl -X POST -H 'Content-Type: text/plain' -H 'Authorization: 2' -d "che figata" http://localhost:3000/photos/3/comments/
-*/
-
 import (
 	"encoding/json"
 	"io"

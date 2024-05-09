@@ -1,10 +1,5 @@
 package api
 
-/*
-go run ./cmd/webapi/
-curl -X DELETE -H 'Authorization: 4' localhost:3000/photos/2
-*/
-
 import (
 	"net/http"
 	"strconv"
