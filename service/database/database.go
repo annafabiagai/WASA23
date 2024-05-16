@@ -42,9 +42,9 @@ type AppDatabase interface {
 
 	// USER TABLE
 
-	CreateUser(nickname string) (dbUser User, err error) //create a new user in TABLE USER
+	CreateUser(nickname string) (dbUser User, err error) // create a new user in TABLE USER
 
-	SetMyNickname(dbUser User) (err error) //update nickname
+	SetMyNickname(dbUser User) (err error) // update nickname
 
 	GetUserByNickname(nickname string) (dbUser User, present bool, err error)
 

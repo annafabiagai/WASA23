@@ -6,10 +6,35 @@ info:
     WASAphoto: uploading and sharing photos with your friends. API made by 1982464 .
   version : 0.0.1
 
+tags:
+  - name: login
+    description: user log in into an alredy existing profile or into a new one.
+  - name: set
+    description: setting a new nickname   
+  - name: user 
+    description: all the operations referring to the user. 
+  - name: ban
+    description: actions relative at the ban section. 
+  - name: following 
+    description: actions relative to follow a user or to be followed by a user.
+  - name: list 
+    description: list of some collections.
+  - name: home page 
+    description: home feed of a user.
+  - name: photo
+    description: all actions relatives to photo section.
+  - name: comment
+    description: relative to comment section.
+  - name: like
+    description: actions relative to like section. 
+  
+
+
 
 
 paths:
-  /session: #####OKAY 
+
+  /session: 
 
     post:
       operationId: doLogin 
@@ -46,10 +71,12 @@ paths:
           # Internal Server Error
           $ref: '#/components/responses/Server_error'
 
-  /user: ######OKAY
+
+
+  /set: 
     put: 
       operationId: setMyUserName
-      tags: [user]
+      tags: [set]
       summary: "Property of the user of modifying the nickname" 
       description: "Modify it's own nickname"
       requestBody:
@@ -74,7 +101,9 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error" 
 
-  /users/{userid}: #####OKAY   
+
+
+  /users/{userid}/: 
     parameters:
       - $ref: '#/components/parameters/user_id'
     
@@ -100,10 +129,12 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error"
 
-  /users/: ####OKAY
+
+
+  /users/: 
     get:
       operationId: searchNickname 
-      tags: ["search"]
+      tags: [user]
       summary : Look for another user through the nickname 
       description: A user can search other user profiles via nickname if he/she is not banned and the desidered profile is returned 
       
@@ -131,7 +162,9 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error"
 
-  /user/{nickname}: ###OKAY
+
+
+  /user/{nickname}:
     parameters:
       - $ref: "#/components/parameters/nickname"
 
@@ -157,7 +190,8 @@ paths:
           $ref: "#/components/responses/Server_error"
    
 
-  /banned/{userid}: ###OKAY
+
+  /banned/{userid}: 
     parameters:
       - $ref: "#/components/parameters/user_id"
 
@@ -203,14 +237,15 @@ paths:
           $ref: "#/components/responses/Server_error"
 
 
-############           
-  /following/{userid}: ####OKAY
+
+          
+  /following/{userid}: 
     parameters:
       - $ref: "#/components/parameters/user_id"  
         
     put:
       operationId: followUser
-      tags: ["following"]
+      tags: [following]
       summary: "follow another user"
       description: "a single user ( that is not banned ) decide to foolow another user" 
       
@@ -235,10 +270,9 @@ paths:
         
     delete:
       operationId: unfollowUser
-      tags: ["following"]
+      tags: [following]
       summary: "unfollowing a peculiar user"
       description: "a user decides to stop following another user"
-      
       
       responses:
 
@@ -254,13 +288,15 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error"
  
-  /users/{userid}/followers/: ###OKAY
+
+
+  /users/{userid}/followers/: 
     parameters:
      - $ref: '#/components/parameters/user_id'
 
     get:
       operationId: getFollowersList
-      tags: [followers]
+      tags: [list]
       summary: get user followers
       description: Get the list of followers for a user.
       responses:
@@ -284,13 +320,15 @@ paths:
         "500":
           $ref: '#/components/responses/Server_error'
 
-  /users/{userid}/followings/  : ###OKAY
+
+
+  /users/{userid}/followings/  :
     parameters:
       - $ref: '#/components/parameters/user_id'
 
     get:
       operationId: getFollowingsList
-      tags: [following]
+      tags: [list]
       summary: get user followings
       description: Get the list of users that a user is following.
       responses:
@@ -314,8 +352,8 @@ paths:
         "500":
           $ref: '#/components/responses/Server_error'
 
-###########    
-#############
+
+
 
   /home_page: ###OKAY 
       
@@ -343,7 +381,8 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error"
 
-  /photos: ###OKAY
+
+  /photos/: ####!!!!!!!!
 
     post:
       operationId: uploadPhoto
@@ -372,8 +411,10 @@ paths:
 
         "500":
           $ref: '#/components/responses/Server_error'
-     
-  /photos/{photoid} : ####OKAY  
+
+
+
+  /photos/{photoid}/ : 
     parameters:
       - $ref: '#/components/parameters/photo_id'
       
@@ -398,16 +439,18 @@ paths:
 
         "500":
           $ref: '#/components/responses/Server_error'
-############
 
-###### 
-  /photos/{photoid}/comments/: ####OKAY
+
+
+
+
+  /photos/{photoid}/comments/: 
     parameters:
       - $ref: '#/components/parameters/photo_id'
     
     post:
       operationId: commentPhoto
-      tags: ["comment"]
+      tags: [comment]
       summary: "posting a comment"
       description: a user posts a comment below the photo specified as parameter
       
@@ -417,7 +460,6 @@ paths:
         content:
             text/plain:
               schema: {$ref: "#/components/schemas/Comment_text"}      
-        
         
       responses:
         '201':
@@ -435,14 +477,16 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error"
 
-  /photos/{photoid}/comments/{commentid}: ####OKAY
+
+
+  /photos/{photoid}/comments/{commentid}: 
     parameters:
       - $ref: '#/components/parameters/photo_id'
       - $ref: '#/components/parameters/comment_id'
     
     delete:
       operationId: uncommentPhoto
-      tags: ['comment']
+      tags: [comment]
       summary: "deleting a comment"
       description: removing a comment from a specific post
       
@@ -461,17 +505,17 @@ paths:
           
         '500': 
           $ref: "#/components/responses/Server_error"
-#######
 
- ###########     
-  /like/{photoid}: ###OKAY
+
+
+  /like/{photoid}: 
     parameters:
       - $ref: '#/components/parameters/photo_id'
 
     
     put: 
       operationId: likePhoto
-      tags: ["like"]
+      tags: [like]
       summary: "put a like"
       description: through the identifier of a pic I put a like 
       
@@ -491,7 +535,7 @@ paths:
     
     delete:
       operationId: unlikePhoto
-      tags: ["like"]
+      tags: [like]
       summary: "unlike a photo" 
       description: "user delete a like from a photo"
       
@@ -512,16 +556,16 @@ paths:
         '500': 
           $ref: "#/components/responses/Server_error"
 
- ######   
+ 
 
-  /users/{userid}/photos/: ###OKAY
+  /users/{userid}/photos/: 
 
     parameters:
       - $ref: "#/components/parameters/user_id"
 
     get:
       operationId: getPhotosList
-      tags: [getters]
+      tags: [list]
       summary: get user photos
       description: Get the list of photos uploaded by a user.
       responses:

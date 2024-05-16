@@ -9,9 +9,9 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.POST("/session", rt.wrap(rt.doLogin)) // OKAY
 
-	rt.router.PUT("/user", rt.wrap(rt.setMyUserName)) // OKAY
+	rt.router.PUT("/set", rt.wrap(rt.setMyUserName)) // OKAY
 
-	rt.router.GET("/users/:userid", rt.wrap(rt.getUserProfile)) // OKAY
+	rt.router.GET("/users/:userid/", rt.wrap(rt.getUserProfile)) // OKAY
 
 	rt.router.GET("/users/", rt.wrap(rt.searchNickname)) // OKAY
 
@@ -25,15 +25,15 @@ func (rt *_router) Handler() http.Handler {
 
 	rt.router.DELETE("/following/:userid", rt.wrap(rt.unfollowUser)) // OKAY
 
-	rt.router.GET("/users/:userid/followings", rt.wrap(rt.getFollowingsList)) // OKAY
+	rt.router.GET("/users/:userid/followings/", rt.wrap(rt.getFollowingsList)) // OKAY
 
-	rt.router.GET("/users/:userid/followers", rt.wrap(rt.getFollowersList)) // OKAY
+	rt.router.GET("/users/:userid/followers/", rt.wrap(rt.getFollowersList)) // OKAY
 
 	rt.router.GET("/home_page", rt.wrap(rt.getMyStream)) // ritorna null, non funziona
 
-	rt.router.POST("/photos", rt.wrap(rt.uploadPhoto)) // OKAY
+	rt.router.POST("/photos/", rt.wrap(rt.uploadPhoto)) // OKAY
 
-	rt.router.DELETE("/photos/:photoid", rt.wrap(rt.deletePhoto)) // OKAY
+	rt.router.DELETE("/photos/:photoid/", rt.wrap(rt.deletePhoto)) // OKAY
 
 	rt.router.POST("/photos/:photoid/comments/", rt.wrap(rt.commentPhoto)) // OKAY
 
