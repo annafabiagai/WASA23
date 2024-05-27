@@ -20,8 +20,8 @@ export default {
 				}
 				let response = await this.$axios.post('/session', {nickname: nickname}, {headers: {'Content-Type': 'application/json'}});
 				let user = response.data // userID, username
-				localStorage.setItem('token', user.userID);
-				localStorage.setItem('nickname', user.nickname);
+				localStorage.setItem('token', user.IDuser);
+				localStorage.setItem('nickname', user.Nickname);
 				// console.log(user)
 				this.$router.replace('/home');
 			} catch (error) {

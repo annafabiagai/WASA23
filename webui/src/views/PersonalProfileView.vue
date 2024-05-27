@@ -3,7 +3,7 @@ export default {
 	methods: {
         // redirects to /profiles/:username
 		async redirect() {
-		    this.$router.replace(`/profiles/${localStorage.getItem('username')}`);
+		    this.$router.replace(`/profiles/${localStorage.getItem('nickname')}`);
 		},
 	},
 	mounted() {

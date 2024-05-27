@@ -10,8 +10,9 @@ export default {
 		async getMyStream() {
 			try {
 				// GET /stream
-                let response = await this.$axios.get('/stream', {headers: {'Authorization': `${localStorage.getItem('token')}`}});
+                let response = await this.$axios.get('/home_page', {headers: {'Authorization': `${localStorage.getItem('token')}`}});
 				this.photos = response.data === null ? [] : response.data;
+				console.log(response)
 				console.log(this.photos)
 			} catch (error) {
 				const status = error.response.status;
@@ -22,7 +23,7 @@ export default {
 		async getAuthorUsername(authorID) {
 			try {
 				// GET /stream
-                let response = await this.$axios.get('/stream', {headers: {'Authorization': `${localStorage.getItem('token')}`}});
+                let response = await this.$axios.get('/home_page', {headers: {'Authorization': `${localStorage.getItem('token')}`}});
 				this.photos = response.data === null ? [] : response.data;
 				console.log(this.photos)
 			} catch (error) {
