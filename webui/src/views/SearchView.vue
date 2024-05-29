@@ -10,12 +10,9 @@ export default {
 		async searchUserByUsername() {
 			try {
 				// GET /users/?username=
-                let username = document.getElementById('username').value;               
-                let response = await this.$axios.get('/users/', {params: {nickname: username}, headers: {'Authorization': `${localStorage.getItem('token')}`}});
-                //console.log(response.data)
+                let username = document.getElementById('username').value;
+                let response = await this.$axios.get('/users/', {params: {username: username}, headers: {'Authorization': `${localStorage.getItem('token')}`}});
                 this.users = response.data
-                
-                
 			} catch (error) {
                 const status = error.response.status;
         		const reason = error.response.data;
@@ -38,14 +35,14 @@ export default {
         </form>
     </div>
 
-    <div v-for="user in users" :key="user.IDuser">
+    <div v-for="user in users" :key="user.userID">
         <div class="modal-body">
             <div class="container-fluid">
                 <div class="row mb-2 mt-2">
                     <div class="col d-flex justify-content-center">
                         <div class="user-mini-card card bg-transparent border-start">
                             <div class="card-body">
-                                <h5 @click="visitProfile(user.nickname)" class="user-mini-card-title d-flex justify-content-center ">@{{ user.nickname }}</h5>
+                                <h5 @click="visitProfile(user.username)" class="user-mini-card-title d-flex justify-content-center ">@{{ user.username }}</h5>
                             </div>
                         </div>
                     </div>

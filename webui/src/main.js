@@ -5,8 +5,8 @@ import axios from './services/axios.js';
 import ErrorMsg from './components/ErrorMsg.vue'
 import LoadingSpinner from './components/LoadingSpinner.vue'
 import Photo from './components/Photo.vue'
-import Comment from './components/Comment.vue'
-import User from './components/User.vue'
+import CommentModal from './components/CommentModal.vue'
+import UsersModal from './components/UsersModal.vue'
 
 
 import './assets/dashboard.css'
@@ -16,14 +16,8 @@ const app = createApp(App)
 app.config.globalProperties.$axios = axios;
 app.component("ErrorMsg", ErrorMsg);
 app.component("LoadingSpinner", LoadingSpinner);
-app.component("Photo", Photo)
-app.component("Comment", Comment);
-app.component("User", User);
+app.component("Photo", Photo);
+app.component("CommentModal", CommentModal);
+app.component("UsersModal", UsersModal);
 app.use(router)
 app.mount('#app')
-
-
-
-
-
-

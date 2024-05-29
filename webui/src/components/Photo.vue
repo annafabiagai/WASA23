@@ -11,18 +11,18 @@ export default {
 		}
 	},
 
-	props: ['IDphoto','IDuser','nickname','date','likesListParent','commentsListParent','isItMe'], 
+	props: ['photoID','authorID','authorUsername','date','likesListParent','commentsListParent','isItMe'], 
 
 	methods: {
-		getPhoto() { // mi manca il metodo get photo nell'API, lillo poi l'ha commentato 
+		getPhoto() {
 			// GET /photos/{pid}/
-			this.photoURL = __API_URL__ + `/photos/${this.IDphoto}/`;
+			this.photoURL = __API_URL__ + `/photos/${this.photoID}/`;
 		},
 		async deletePhoto() {
 			try {
 				// DELETE /photos/{pid}/
-				await this.$axios.delete(`/photos/${this.IDphoto}/`, {headers: {'Authorization': `${localStorage.getItem('token')}`}});
-				this.$emit("removePhoto", this.IDphoto);
+				await this.$axios.delete(`/photos/${this.photoID}/`, {headers: {'Authorization': `${localStorage.getItem('token')}`}});
+				this.$emit("removePhoto", this.photoID);
 			} catch (error) {
                 const status = error.response.status;
         		const reason = error.response.data;
@@ -32,18 +32,18 @@ export default {
 		},
 		visitAuthorProfile() {
             // /profiles/:username
-			this.$router.push(`/profiles/${this.nickname}`);
+			this.$router.push(`/profiles/${this.authorUsername}`);
 		},
 		async likeToggle() {
 			try {
 				if (!this.liked) {
 					// PUT /likes/{pid}
-                    await this.$axios.put(`/like/${this.IDphoto}`, null, {headers: {'Authorization': `${localStorage.getItem('token')}`}});
-					this.likesList.push({IDuser: localStorage.getItem('token'), nickname: localStorage.getItem('nickname')});
+                    await this.$axios.put(`/likes/${this.photoID}`, null, {headers: {'Authorization': `${localStorage.getItem('token')}`}});
+					this.likesList.push({userID: localStorage.getItem('token'), username: localStorage.getItem('username')});
 				} else {
 					// DELETE /likes/{pid}
-                    await this.$axios.delete(`/like/${this.IDphoto}`, {headers: {'Authorization': `${localStorage.getItem('token')}`}});
-                    this.likesList = this.likesList.filter(user => user.IDuser != localStorage.getItem('token'));
+                    await this.$axios.delete(`/likes/${this.photoID}`, {headers: {'Authorization': `${localStorage.getItem('token')}`}});
+                    this.likesList = this.likesList.filter(user => user.userID != localStorage.getItem('token'));
 				}
 				this.liked = !this.liked;
 			} catch (error) {
@@ -54,18 +54,18 @@ export default {
             }
     	},
         // on child event
-		removeCommentFromList(IDcomment) {
-			this.commentsList = this.commentsList.filter(comment => comment.IDcomment != IDcomment);
+		removeCommentFromList(commentID) {
+			this.commentsList = this.commentsList.filter(comment => comment.commentID != commentID);
 		},
 		addCommentToList(comment){
 			this.commentsList.unshift(comment); // at the beginning of the list
 		},
-        visitLiker(nickname) {
-            if (nickname != this.$route.params.username) {
+        visitLiker(username) {
+            if (username != this.$route.params.username) {
                 document.querySelector('.modal-backdrop').remove();
                 document.querySelector('.modal').remove();
                 document.body.style.overflow = 'auto';
-                this.$router.push(`/profiles/${nickname}`);
+                this.$router.push(`/profiles/${username}`);
             }
         }
 	},
@@ -78,7 +78,7 @@ export default {
         if (this.commentsListParent != null) {
             this.commentsList = this.commentsListParent
         }
-		this.liked = this.likesList.some(user => user.IDuser == localStorage.getItem('token'));
+		this.liked = this.likesList.some(user => user.userID == localStorage.getItem('token'));
 	},
 }
 </script>
@@ -87,16 +87,16 @@ export default {
 	<div class="container-fluid mt-3 mb-5 ">
 
         <UsersModal
-        :modalID="'likesModal'+IDphoto" 
+        :modalID="'likesModal'+photoID" 
 		:usersList="likesList"
         @visitUser="visitLiker"
         />
 
         <CommentModal
-        :modalID="'commentModal'+IDphoto" 
+        :modalID="'commentModal'+photoID" 
 		:commentsList="commentsList" 
 		:isItMe="isItMe" 
-		:IDphoto="IDphoto"
+		:photoID="photoID"
 		@removeComment="removeCommentFromList"
 		@addComment="addCommentToList"
 		/>
@@ -118,18 +118,18 @@ export default {
                         <div class="d-flex flex-row justify-content-end align-items-center mb-2">
                             <!--author-->
 							<button class="my-trnsp-btn m-0 p-1 me-auto" @click="visitAuthorProfile">
-                            	<i> From {{this.nickname}}</i>
+                            	<i> From {{authorUsername}}</i>
 							</button>
                             <!--like-->
                             <button class="my-trnsp-btn m-0 p-1 d-flex justify-content-center align-items-center">
                                 <i @click="likeToggle" :class="'me-1 my-heart-color w-100 h-100 fa '+(liked ? 'fa-heart' : 'fa-heart-o')"></i>
-                                <i data-bs-toggle="modal" :data-bs-target="'#likesModal'+IDphoto" class="my-comment-color ">
+                                <i data-bs-toggle="modal" :data-bs-target="'#likesModal'+photoID" class="my-comment-color ">
                                     {{likesList.length}}
                                 </i>
                             </button>
                             <!--comment-->
                             <button class="my-trnsp-btn m-0 p-1  d-flex justify-content-center align-items-center" 
-							data-bs-toggle="modal" :data-bs-target="'#commentModal'+IDphoto">
+							data-bs-toggle="modal" :data-bs-target="'#commentModal'+photoID">
                                 <i class="my-comment-color fa-regular fa-comment me-1"></i>
                                 <i class="my-comment-color-2"> {{commentsList.length}}</i>
                             </button>

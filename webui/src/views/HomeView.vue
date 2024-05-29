@@ -10,21 +10,21 @@ export default {
 		async getMyStream() {
 			try {
 				// GET /stream
-                let response = await this.$axios.get('/home_page', {headers: {'Authorization': `${localStorage.getItem('token')}`}});
+                let response = await this.$axios.get('/stream', {headers: {'Authorization': `${localStorage.getItem('token')}`}});
 				this.photos = response.data === null ? [] : response.data;
-				console.log(response)
+				console.log(this.photos)
 			} catch (error) {
 				const status = error.response.status;
         		const reason = error.response.data;
                 this.errormsg = `Status ${status}: ${reason}`;
             }
 		},
-		async getAuthorUsername(IDuser) {
+		async getAuthorUsername(authorID) {
 			try {
 				// GET /stream
-                let response = await this.$axios.get('/home_page', {headers: {'Authorization': `${localStorage.getItem('token')}`}});
+                let response = await this.$axios.get('/stream', {headers: {'Authorization': `${localStorage.getItem('token')}`}});
 				this.photos = response.data === null ? [] : response.data;
-				// console.log(this.photos)
+				console.log(this.photos)
 			} catch (error) {
 				const status = error.response.status;
         		const reason = error.response.data;
@@ -42,13 +42,13 @@ export default {
 	<div class="container-fluid">
 		<div class="row">
 			<Photo v-for="photo in photos"
-			:key="photo.IDphoto"
-			:IDphoto="photo.IDphoto"
-			:IDuser="photo.IDuser"
-			:nickname="photo.nickname"
+			:key="photo.photoID"
+			:photoID="photo.photoID"
+			:authorID="photo.authorID"
+			:authorUsername="photo.authorUsername"
 			:date="photo.date"
-			:likesListParent="photo.likeList"
-			:commentsListParent="photo.commentList"
+			:likesListParent="photo.likesList"
+			:commentsListParent="photo.commentsList"
 			:isItMe="false"
 			/>
 		</div>

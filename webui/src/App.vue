@@ -1,5 +1,5 @@
 <script setup>
-import { RouterLink, RouterView, loadRouteLocation } from 'vue-router'
+import { RouterLink, RouterView } from 'vue-router'
 </script>
 <script>
 export default {
@@ -13,16 +13,15 @@ export default {
 		async doLogin() {
 			try {
 				// POST /session
-				let nickname = document.getElementById('nickname').value;
-				if (!nickname.match("^[a-zA-Z][a-zA-Z0-9_]{2,15}$")) {
-                alert("Invalid nickname: 3 - 16 characters; first character must be a letter; only letters, numbers and underscores allowed");
+				let username = document.getElementById('username').value;
+				if (!username.match("^[a-zA-Z][a-zA-Z0-9_]{2,15}$")) {
+                alert("Invalid username: 3 - 16 characters; first character must be a letter; only letters, numbers and underscores allowed");
                 return;
 				}
-				let response = await this.$axios.post('/session', {nickname: nickname}, {headers: {'Content-Type': 'application/json'}});
+				let response = await this.$axios.post('/session', {username: username}, {headers: {'Content-Type': 'application/json'}});
 				let user = response.data // userID, username
-				localStorage.setItem('token', user.IDuser);
-				localStorage.setItem('nickname', user.Nickname);
-				// console.log(user)
+				localStorage.setItem('token', user.userID);
+				localStorage.setItem('username', user.username);
 				this.$router.replace('/home');
 			} catch (error) {
 				const status = error.response.status;
@@ -114,14 +113,14 @@ export default {
 							<div class="card-body p-5 text-center">
 								<h2 class="fw-bold mb-4 text-uppercase">Welcome</h2>
 								<p class="text-muted">
-									Please enter your nickname.
+									Please enter your username.
 								</p>
 								<div class="form-group">
 									<input
 										type="text"
-										id="nickname"
+										id="username"
 										class="form-control form-control-lg rounded-pill mb-3"
-										placeholder="Nickname"
+										placeholder="Username"
 										required
 										/>
 								</div>

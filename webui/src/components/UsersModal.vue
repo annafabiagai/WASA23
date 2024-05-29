@@ -4,10 +4,9 @@ export default {
 	props:['modalID','usersList'],
 
     methods: {
-        visitUser(nickname) {
+        visitUser(username) {
             // /profiles/:username
-            this.$emit('visitUser', nickname); // signal to parent
-            
+            this.$emit('visitUser', username); // signal to parent
 		},
     }
 }
@@ -21,7 +20,7 @@ export default {
                     <h1 class="modal-title fs-5" :id="modalID">{{ modalID.slice(0, 5) }}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div v-for="user in usersList" :key="user.IDuser">
+                <div v-for="user in usersList" :key="user.userID">
                     <div class="modal-body">
                         <div class="container-fluid">
                             <hr>
@@ -29,7 +28,7 @@ export default {
                                 <div class="col d-flex justify-content-center">
                                     <div class="user-mini-card card bg-transparent border-start">
                                         <div class="card-body">
-                                            <h5 @click="visitUser(user.nickname)" class="user-mini-card-title d-flex justify-content-center ">@{{ user.nickname }}</h5>
+                                            <h5 @click="visitUser(user.username)" class="user-mini-card-title d-flex justify-content-center ">@{{ user.username }}</h5>
                                         </div>
                                     </div>
                                 </div>

@@ -10,12 +10,11 @@ export default {
                 alert("Invalid username: 3 - 16 characters; first character must be a letter; only letters, numbers and underscores allowed");
                 return;
 				}
-				let response = await this.$axios.put('/set', {nickname: username}, {headers: {'Authorization': `${localStorage.getItem('token')}`, 'Content-Type': 'application/json'}});
+				let response = await this.$axios.put('/settings', {username: username}, {headers: {'Authorization': `${localStorage.getItem('token')}`, 'Content-Type': 'application/json'}});
 				let user = response.data // userID, username
-				// console.log(user)
-				localStorage.setItem('token', user.IDuser);
-				localStorage.setItem('nickname', user.Nickname);
-                alert(`Nickname correctly updated to: ${user.Nickname}`)
+				localStorage.setItem('token', user.userID);
+				localStorage.setItem('username', user.username);
+                alert(`Username correctly updated to: ${user.username}`)
             } catch (error) {
 				const status = error.response.status;
         		const errorMessage = error.response.data;
