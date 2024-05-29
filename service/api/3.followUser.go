@@ -19,7 +19,7 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
-	follower, present, err := rt.db.GetUserByID(token)
+	follower, present, err := rt.db.SearchUserByID(token)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -31,21 +31,21 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 	}
 
 	var pathUid uint64
-	pathUid, err = strconv.ParseUint(ps.ByName("userid"), 10, 64)
+	pathUid, err = strconv.ParseUint(ps.ByName("uid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "followUser: invalid path parameter user id"
+		stringErr := "followUser: invalid path parameter uid"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
-	followed, present, err := rt.db.GetUserByID(pathUid)
+	followed, present, err := rt.db.SearchUserByID(pathUid)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	if !present {
-		stringErr := "followUser: path parameter user id not matching any existing user"
+		stringErr := "followUser: path parameter uid not matching any existing user"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
@@ -66,7 +66,7 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 	}
 
 	// Forbidden check
-	someoneIsBanned, err := rt.db.CheckBan(follower.ID, followed.ID)
+	someoneIsBanned, err := rt.db.CheckBanBothDirections(follower.ID, followed.ID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

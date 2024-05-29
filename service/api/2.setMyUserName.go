@@ -10,7 +10,8 @@ import (
 )
 
 func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
-	var token uint64 // ID DELLO USER
+
+	var token uint64
 	token, err := strconv.ParseUint(r.Header.Get("Authorization"), 10, 64)
 
 	// Unauthorized check
@@ -19,20 +20,20 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
-	dbUser, present, err := rt.db.GetUserByID(token)
+	dbUser, present, err := rt.db.SearchUserByID(token)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if !present { // Checks if the user corresponding to the provided token exists in the database.
+	if !present {
 		stringErr := "setMyUserName: authorization token not matching any existing user"
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
 
-	var updatedUser User                               // Declares a variable updatedUser of type User. This variable will store the updated user data.
-	updatedUser.FromDatabase(dbUser)                   // Populates the updatedUser struct with the user data retrieved from the database.
-	err = json.NewDecoder(r.Body).Decode(&updatedUser) // Decodes the JSON data from the request body into the updatedUser variable
+	var updatedUser User
+	updatedUser.FromDatabase(dbUser)
+	err = json.NewDecoder(r.Body).Decode(&updatedUser)
 
 	// BadRequest check
 	if err != nil {
@@ -41,24 +42,25 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 	if !updatedUser.HasValidUsername() {
-		stringErr := "setMyUserName: invalid nickname"
+		stringErr := "setMyUserName: invalid username"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
-	_, present, err = rt.db.GetUserByNickname(updatedUser.Nickname) // : Checks if the provided nickname already exists in the database.
+	_, present, err = rt.db.SearchUserByUsername(updatedUser.Name)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	if present {
-		stringErr := "setMyUserName: nickname already exists"
+		stringErr := "setMyUserName: username already exists"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
 
 	// database section
-	err = rt.db.SetMyNickname(updatedUser.ToDatabase())
+	err = rt.db.UpdateUsername(updatedUser.ToDatabase())
 
+	// InternalServerError check
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

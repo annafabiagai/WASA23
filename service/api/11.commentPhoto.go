@@ -22,7 +22,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
-	owner, present, err := rt.db.GetUserByID(token)
+	author, present, err := rt.db.SearchUserByID(token)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -34,27 +34,27 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	var pathPid uint64
-	pathPid, err = strconv.ParseUint(ps.ByName("photoid"), 10, 64)
+	pathPid, err = strconv.ParseUint(ps.ByName("pid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "commentPhoto: invalid path parameter photoid"
+		stringErr := "commentPhoto: invalid path parameter pid"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
-	photo, present, err := rt.db.GetPhotoByID(pathPid)
+	photo, present, err := rt.db.SearchPhotoByID(pathPid)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	if !present {
-		stringErr := "commentPhoto: path parameter photo id not matching any existing photo"
+		stringErr := "commentPhoto: path parameter pid not matching any existing photo"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
 
 	// Forbidden check
-	someoneIsBanned, err := rt.db.CheckBan(owner.ID, photo.OwnerID)
+	someoneIsBanned, err := rt.db.CheckBanBothDirections(author.ID, photo.AuthorID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -73,11 +73,11 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 	commentText := string(body)
 	comment := Comment{
-		PhotoID:  photo.ID,
-		OwnerID:  owner.ID,
-		Nickname: owner.Nickname,
-		Text:     commentText,
-		Date:     time.Now().Format("2006-01-02 15:04:05"),
+		PhotoID:        photo.ID,
+		AuthorID:       author.ID,
+		AuthorUsername: author.Name,
+		Text:           commentText,
+		Date:           time.Now().Format("2006-01-02 15:04:05"),
 	}
 
 	// database section

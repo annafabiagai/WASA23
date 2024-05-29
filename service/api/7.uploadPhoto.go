@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/annafabia03/WASA23/service/album"
+	"github.com/annafabia03/WASA23/service/fileSystem"
 	"github.com/annafabia03/WASA23/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 )
@@ -23,7 +23,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
-	owner, present, err := rt.db.GetUserByID(token)
+	author, present, err := rt.db.SearchUserByID(token)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -56,9 +56,9 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 
 	binaryImage := binaryData
 	photo := Photo{
-		OwnerID: owner.ID,
-		Format:  format,
-		Date:    time.Now().Format("2006-01-02 15:04:05"),
+		AuthorID: author.ID,
+		Format:   format,
+		Date:     time.Now().Format("2006-01-02 15:04:05"),
 	}
 
 	// database section
@@ -72,7 +72,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	// fileSystem section
-	err = album.CreatePhotoFile(photo.ToAlbum(), binaryImage)
+	err = fs.CreatePhotoFile(photo.ToFileSystem(), binaryImage)
 
 	// InternalServerError check
 	if err != nil {
@@ -83,5 +83,6 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(photo)
+
 
 }

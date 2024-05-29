@@ -20,7 +20,7 @@ func (rt *_router) getFollowingsList(w http.ResponseWriter, r *http.Request, ps 
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
-	requestingUser, present, err := rt.db.GetUserByID(token)
+	requestingUser, present, err := rt.db.SearchUserByID(token)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -32,15 +32,15 @@ func (rt *_router) getFollowingsList(w http.ResponseWriter, r *http.Request, ps 
 	}
 
 	var pathUid uint64
-	pathUid, err = strconv.ParseUint(ps.ByName("userid"), 10, 64)
+	pathUid, err = strconv.ParseUint(ps.ByName("uid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "getFollowingsList: invalid path parameter user id"
+		stringErr := "getFollowingsList: invalid path parameter uid"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
-	requestedUser, present, err := rt.db.GetUserByID(pathUid)
+	requestedUser, present, err := rt.db.SearchUserByID(pathUid)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -52,7 +52,7 @@ func (rt *_router) getFollowingsList(w http.ResponseWriter, r *http.Request, ps 
 	}
 
 	// Forbidden check
-	someoneIsBanned, err := rt.db.CheckBan(requestingUser.ID, requestedUser.ID)
+	someoneIsBanned, err := rt.db.CheckBanBothDirections(requestingUser.ID, requestedUser.ID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -20,7 +20,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
-	requestingUser, present, err := rt.db.GetUserByID(token)
+	requestingUser, present, err := rt.db.SearchUserByID(token)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -32,21 +32,21 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	var pathUid uint64
-	pathUid, err = strconv.ParseUint(ps.ByName("userid"), 10, 64)
+	pathUid, err = strconv.ParseUint(ps.ByName("uid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "getUserProfile: invalid path parameter user id"
+		stringErr := "getUserProfile: invalid path parameter uid"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
-	requestedUser, present, err := rt.db.GetUserByID(pathUid)
+	requestedUser, present, err := rt.db.SearchUserByID(pathUid)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	if !present {
-		stringErr := "getUserProfile: path parameter user id not matching any existing user"
+		stringErr := "getUserProfile: path parameter uid not matching any existing user"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
@@ -68,13 +68,13 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	requestedProfile.InBannedList = isBanned
+	requestedProfile.IsInMyBannedList = isBanned
 	isBanned, err = rt.db.CheckBan(requestedUser.ID, requestingUser.ID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	requestedProfile.MeBanned = isBanned
+	requestedProfile.AmIBanned = isBanned
 
 	// database section
 	dbProfile, err := rt.db.GetUserProfile(requestedUser.ID)

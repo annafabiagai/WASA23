@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/annafabia03/WASA23/service/album"
+	"github.com/annafabia03/WASA23/service/fileSystem"
 	"github.com/annafabia03/WASA23/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 )
@@ -20,7 +20,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
-	requestingUser, present, err := rt.db.GetUserByID(token)
+	requestingUser, present, err := rt.db.SearchUserByID(token)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -32,7 +32,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	var pathPid uint64
-	pathPid, err = strconv.ParseUint(ps.ByName("photoid"), 10, 64)
+	pathPid, err = strconv.ParseUint(ps.ByName("pid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
@@ -40,7 +40,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
-	dbPhoto, present, err := rt.db.GetPhotoByID(pathPid)
+	dbPhoto, present, err := rt.db.SearchPhotoByID(pathPid)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -52,7 +52,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	// Forbidden check
-	if requestingUser.ID != dbPhoto.OwnerID {
+	if requestingUser.ID != dbPhoto.AuthorID {
 		stringErr := "deletePhoto: requesting user not author of the photo"
 		http.Error(w, stringErr, http.StatusForbidden)
 		return
@@ -70,7 +70,7 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	// fileSystem section
 	var photo Photo
 	photo.FromDatabase(dbPhoto)
-	err = album.DeletePhotoFile(photo.ToAlbum())
+	err = fs.DeletePhotoFile(photo.ToFileSystem())
 
 	// InternalServerError check
 	if err != nil {

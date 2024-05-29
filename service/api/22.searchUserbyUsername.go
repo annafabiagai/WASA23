@@ -9,31 +9,31 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func (rt *_router) searchNickname(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+func (rt *_router) searchUserByUsername(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	var token uint64
 	token, err := strconv.ParseUint(r.Header.Get("Authorization"), 10, 64)
 
 	// Unauthorized check
 	if err != nil {
-		stringErr := "searchNickname: invalid authorization token"
+		stringErr := "searchUserByUsername: invalid authorization token"
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
-	_, present, err := rt.db.GetUserByID(token)
+	_, present, err := rt.db.SearchUserByID(token)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	if !present {
-		stringErr := "searchNickname: authorization token not matching any existing user"
+		stringErr := "searchUserByUsername: authorization token not matching any existing user"
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
 
-	usernameToSearch := r.URL.Query().Get("nickname")
+	usernameToSearch := r.URL.Query().Get("username")
 
-	// database sections
+	// database section
 	usersList, err := rt.db.SearchUser(usernameToSearch)
 
 	// InternalServerError check

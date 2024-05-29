@@ -19,7 +19,7 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
-	requestingUser, present, err := rt.db.GetUserByID(token)
+	requestingUser, present, err := rt.db.SearchUserByID(token)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -31,31 +31,31 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	var pathPid uint64
-	pathPid, err = strconv.ParseUint(ps.ByName("photoid"), 10, 64)
+	pathPid, err = strconv.ParseUint(ps.ByName("pid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "uncommentPhoto: invalid path parameter photoid"
+		stringErr := "uncommentPhoto: invalid path parameter pid"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
-	dbPhoto, present, err := rt.db.GetPhotoByID(pathPid)
+	dbPhoto, present, err := rt.db.SearchPhotoByID(pathPid)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	if !present {
-		stringErr := "uncommentPhoto: path parameter photoid not matching any existing photo"
+		stringErr := "uncommentPhoto: path parameter pid not matching any existing photo"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
 
 	var pathCid uint64
-	pathCid, err = strconv.ParseUint(ps.ByName("commentid"), 10, 64)
+	pathCid, err = strconv.ParseUint(ps.ByName("cid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "uncommentPhoto: invalid path parameter comment id"
+		stringErr := "uncommentPhoto: invalid path parameter cid"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
@@ -65,14 +65,14 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 	if !present {
-		stringErr := "uncommentPhoto: path parameter comment id not matching any existing comment"
+		stringErr := "uncommentPhoto: path parameter cid not matching any existing comment"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
 
 	// Forbidden check
-	isAuthor := requestingUser.ID == dbPhoto.OwnerID
-	if requestingUser.ID != comment.OwnerID && !isAuthor {
+	isAuthor := requestingUser.ID == dbPhoto.AuthorID
+	if requestingUser.ID != comment.AuthorID && !isAuthor {
 		stringErr := "uncommentPhoto: requesting user not author of the comment"
 		http.Error(w, stringErr, http.StatusForbidden)
 		return

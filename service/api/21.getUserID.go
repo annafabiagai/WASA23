@@ -9,37 +9,37 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func (rt *_router) getIDuser(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+func (rt *_router) getUserId(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	var token uint64
 	token, err := strconv.ParseUint(r.Header.Get("Authorization"), 10, 64)
 
 	// Unauthorized check
 	if err != nil {
-		stringErr := "getIDuser: invalid authorization token"
+		stringErr := "getUserId: invalid authorization token"
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
-	_, present, err := rt.db.GetUserByID(token)
+	_, present, err := rt.db.SearchUserByID(token)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	if !present {
-		stringErr := "getIDuser: authorization token not matching any existing user"
+		stringErr := "getUserId: authorization token not matching any existing user"
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
 
-	username := ps.ByName("nickname")
+	username := ps.ByName("username")
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "getIDuser: invalid path parameter nickname"
+		stringErr := "getUserId: invalid path parameter username"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
-	requestedUser, present, err := rt.db.GetUserByNickname(username)
+	requestedUser, present, err := rt.db.SearchUserByUsername(username)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

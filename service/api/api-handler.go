@@ -7,43 +7,47 @@ import (
 // Handler returns an instance of httprouter.Router that handle APIs registered here
 func (rt *_router) Handler() http.Handler {
 
-	rt.router.POST("/session", rt.wrap(rt.doLogin)) // OKAY
+	// Register routes
 
-	rt.router.PUT("/set", rt.wrap(rt.setMyUserName)) // OKAY
+	// Session
+	rt.router.POST("/session", rt.wrap(rt.doLogin))
 
-	rt.router.GET("/users/:userid/", rt.wrap(rt.getUserProfile)) // OKAY
+	// Settings
+	rt.router.PUT("/settings", rt.wrap(rt.setMyUserName))
 
-	rt.router.GET("/users/", rt.wrap(rt.searchNickname)) // OKAY
+	// Following
+	rt.router.PUT("/following/:uid", rt.wrap(rt.followUser))
+	rt.router.DELETE("/following/:uid", rt.wrap(rt.unfollowUser))
 
-	rt.router.GET("/user/:nickname", rt.wrap(rt.getIDuser)) // OKAY
+	// Banned
+	rt.router.PUT("/banned/:uid", rt.wrap(rt.banUser))
+	rt.router.DELETE("/banned/:uid", rt.wrap(rt.unbanUser))
 
-	rt.router.PUT("/banned/:userid", rt.wrap(rt.banUser)) // OKAY
+	// Photos
+	rt.router.POST("/photos/", rt.wrap(rt.uploadPhoto))
+	rt.router.DELETE("/photos/:pid/", rt.wrap(rt.deletePhoto))
 
-	rt.router.DELETE("/banned/:userid", rt.wrap(rt.unbanUser)) // OKAY
+	// Likes
+	rt.router.PUT("/likes/:pid", rt.wrap(rt.likePhoto))
+	rt.router.DELETE("/likes/:pid", rt.wrap(rt.unlikePhoto))
 
-	rt.router.PUT("/following/:userid", rt.wrap(rt.followUser)) // OKAY
+	// Comments
+	rt.router.POST("/photos/:pid/comments/", rt.wrap(rt.commentPhoto))
+	rt.router.DELETE("/photos/:pid/comments/:cid", rt.wrap(rt.uncommentPhoto))
 
-	rt.router.DELETE("/following/:userid", rt.wrap(rt.unfollowUser)) // OKAY
+	// Getters
+	rt.router.GET("/users/:uid/", rt.wrap(rt.getUserProfile))
+	rt.router.GET("/users/:uid/photos/", rt.wrap(rt.getPhotosList))
+	rt.router.GET("/users/:uid/followers/", rt.wrap(rt.getFollowersList))
+	rt.router.GET("/users/:uid/followings/", rt.wrap(rt.getFollowingsList))
+	rt.router.GET("/photos/:pid/", rt.wrap(rt.getPhoto))
+	rt.router.GET("/photos/:pid/likes/", rt.wrap(rt.getLikesList))
+	rt.router.GET("/photos/:pid/comments/", rt.wrap(rt.getCommentsList))
+	rt.router.GET("/stream", rt.wrap(rt.getMyStream))
+	rt.router.GET("/user/:username", rt.wrap(rt.getUserId))
 
-	rt.router.GET("/users/:userid/followings/", rt.wrap(rt.getFollowingsList)) // OKAY
-
-	rt.router.GET("/users/:userid/followers/", rt.wrap(rt.getFollowersList)) // OKAY
-
-	rt.router.GET("/home_page", rt.wrap(rt.getMyStream)) // ritorna null, non funziona
-
-	rt.router.POST("/photos/", rt.wrap(rt.uploadPhoto)) // OKAY
-
-	rt.router.DELETE("/photos/:photoid/", rt.wrap(rt.deletePhoto)) // OKAY
-
-	rt.router.POST("/photos/:photoid/comments/", rt.wrap(rt.commentPhoto)) // OKAY
-
-	rt.router.DELETE("/photos/:photoid/comments/:commentid", rt.wrap(rt.uncommentPhoto)) // OKAY
-
-	rt.router.GET("/users/:userid/photos/", rt.wrap(rt.getPhotosList)) // OKAY
-
-	rt.router.PUT("/like/:photoid", rt.wrap(rt.likePhoto)) // OKAY
-
-	rt.router.DELETE("/like/:photoid", rt.wrap(rt.unlikePhoto)) // OKAY
+	// Search
+	rt.router.GET("/users/", rt.wrap(rt.searchUserByUsername))
 
 	// Special routes
 	rt.router.GET("/liveness", rt.liveness)

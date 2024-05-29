@@ -1,4 +1,4 @@
-package album
+package fs
 
 import (
 	"fmt"
@@ -6,10 +6,10 @@ import (
 )
 
 type Photo struct {
-	ID      uint64 `json:"photoID"`
-	OwnerID uint64 `json:"ownerID"`
-	Format  string `json:"format"`
-	Date    string `json:"date"`
+	ID       uint64 `json:"photoID"`
+	AuthorID uint64 `json:"authorID"`
+	Format   string `json:"format"`
+	Date     string `json:"date"`
 }
 
 func (p *Photo) Path() (photoPath string) {

@@ -1,4 +1,10 @@
 /*
+The database can be found here:
+/private/tmp/decaf.db
+open /tmp
+*/
+
+/*
 Package database is the middleware between the app database and the code. All data (de)serialization (save/load) from a
 persistent database are handled here. Database specific logic should never escape this package.
 
@@ -28,7 +34,6 @@ This is an example on how to migrate the DB and connect to it:
 
 Then you can initialize the AppDatabase and pass it to the api package.
 */
-
 package database
 
 import (
@@ -40,77 +45,52 @@ import (
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 
-	// USER TABLE
+	// Users table
+	CreateUser(username string) (dbUser User, err error)
+	UpdateUsername(dbUser User) (err error)
+	SearchUserByUsername(username string) (dbUser User, present bool, err error)
+	SearchUserByID(ID uint64) (dbUser User, present bool, err error)
 
-	CreateUser(nickname string) (dbUser User, err error) // create a new user in TABLE USER
-
-	SetMyNickname(dbUser User) (err error) // update nickname
-
-	GetUserByNickname(nickname string) (dbUser User, present bool, err error)
-
-	GetUserByID(ID uint64) (dbUser User, present bool, err error)
-
-	SearchUser(nicknameToSearch string) (userList []User, err error)
-
-	GetUserProfile(ID uint64) (dbProfile Profile, err error)
-
-	GetMyStream(requestingUserID uint64) (stream []Photo, err error)
-
-	// FOLLOW TABLE
-
+	// Following table
 	FollowUser(followerID uint64, followedID uint64) (err error)
-
 	UnfollowUser(followerID uint64, followedID uint64) (err error)
-
 	CheckFollow(followerID uint64, followedID uint64) (isFollowing bool, err error)
-
-	GetFollowersList(followedID uint64) (followersList []User, err error)
-
-	GetFollowingsList(followerID uint64) (followingsList []User, err error)
-
 	RemoveFollowBothDirections(user1ID uint64, user2ID uint64) (err error)
 
-	// BAN TABLE
-
+	// Banned table
 	BanUser(bannerID uint64, bannedID uint64) (err error)
-
 	UnbanUser(bannerID uint64, bannedID uint64) (err error)
-
 	CheckBan(bannerID uint64, bannedID uint64) (isBanned bool, err error)
-
+	CheckBanBothDirections(user1ID uint64, user2ID uint64) (someoneIsBanned bool, err error)
 	CascadeBanBothDirections(user1ID uint64, user2ID uint64) (err error)
 
-	// PHOTO TABLE
-
+	// Photos table
 	CreatePhoto(photo Photo) (dbPhoto Photo, err error)
-
 	DeletePhoto(ID uint64) (err error)
+	SearchPhotoByID(ID uint64) (dbPhoto Photo, present bool, err error)
 
-	GetPhotoByID(ID uint64) (dbPhoto Photo, present bool, err error)
-
-	GetPhotosList(ownerID uint64) (photosList []Photo, err error)
-
-	// LIKE TABLE
-
+	// Likes table
 	LikePhoto(likerID uint64, photoID uint64) (err error)
-
 	UnlikePhoto(likerID uint64, photoID uint64) (err error)
-
-	GetLikesList(photoID uint64) (likesList []User, err error)
-
 	RemoveLikesBothDirections(user1ID uint64, user2ID uint64) (err error)
 
-	// COMMENT TABLE
-
-	SearchCommentByID(ID uint64) (dbComment Comment, present bool, err error)
-
+	// Comments table
 	CommentPhoto(comment Comment) (dbComment Comment, err error)
-
 	UncommentPhoto(ID uint64) (err error)
-
-	GetCommentsList(photoID uint64) (commentsList []Comment, err error)
-
+	SearchCommentByID(ID uint64) (dbComment Comment, present bool, err error)
 	RemoveCommentsBothDirections(user1ID uint64, user2ID uint64) (err error)
+
+	// Getters
+	GetUserProfile(ID uint64) (dbProfile Profile, err error)
+	GetPhotosList(authorID uint64) (photosList []Photo, err error)
+	GetFollowersList(followedID uint64) (followersList []User, err error)
+	GetFollowingsList(followerID uint64) (followingsList []User, err error)
+	GetLikesList(photoID uint64) (likesList []User, err error)
+	GetCommentsList(photoID uint64) (commentsList []Comment, err error)
+	GetMyStream(requestingUserID uint64) (stream []Photo, err error)
+
+	// Search
+	SearchUser(usernameToSearch string) (usersList []User, err error)
 
 	Ping() error
 }
@@ -126,9 +106,9 @@ func New(db *sql.DB) (AppDatabase, error) {
 		return nil, errors.New("database is required when building a AppDatabase")
 	}
 
-	//  Check if table exists. If not, the database is empty, and we need to create the structure
+	// Check if table exists. If not, the database is empty, and we need to create the structure
 	var tableName string
-	err := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='example_table';`).Scan(&tableName)
+	err := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='users';`).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
 		err = createDatabase(db)
 		if err != nil {
@@ -145,50 +125,45 @@ func (db *appdbimpl) Ping() error {
 	return db.c.Ping()
 }
 
+// This function creates the entire structure of the database (tables and relations) through SQL statements.
 func createDatabase(db *sql.DB) error {
-
 	tables := [6]string{
-
-		`CREATE TABLE IF NOT EXISTS user (
+		`CREATE TABLE IF NOT EXISTS users (
 			userID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-			nickname VARCHAR(16) NOT NULL UNIQUE
+			username VARCHAR(16) NOT NULL UNIQUE
 			);`,
-
-		`CREATE TABLE IF NOT EXISTS follow(
+		`CREATE TABLE IF NOT EXISTS following (
 			followerID INTEGER NOT NULL REFERENCES users (userID),
 			followedID INTEGER NOT NULL REFERENCES users (userID),
 			PRIMARY KEY (followerID, followedID)
 			);`,
-
-		`CREATE TABLE IF NOT EXISTS bann (
+		`CREATE TABLE IF NOT EXISTS banned (
 			bannerID INTEGER NOT NULL REFERENCES users (userID),
 			bannedID INTEGER NOT NULL REFERENCES users (userID),
 			PRIMARY KEY (bannerID, bannedID)
 			);`,
-
-		`CREATE TABLE IF NOT EXISTS photo (
+		`CREATE TABLE IF NOT EXISTS photos (
 			photoID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-			ownerID INTEGER NOT NULL REFERENCES users (userID),
+			authorID INTEGER NOT NULL REFERENCES users (userID),
 			format VARCHAR(3) NOT NULL,
 			date TEXT NOT NULL
 			);`,
-
-		`CREATE TABLE IF NOT EXISTS like (
+		`CREATE TABLE IF NOT EXISTS likes (
 			likerID INTEGER NOT NULL REFERENCES users (userID),
 			photoID INTEGER NOT NULL REFERENCES photos (photoID),
 			PRIMARY KEY (likerID, photoID)
 			);`,
-
-		`CREATE TABLE IF NOT EXISTS comment (
+		`CREATE TABLE IF NOT EXISTS comments (
 			commentID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 			photoID INTEGER NOT NULL REFERENCES photos (photoID),
-			ownerID INTEGER NOT NULL REFERENCES users (userID),
-			nickname VARCHAR(16) NOT NULL REFERENCES users (username),
+			authorID INTEGER NOT NULL REFERENCES users (userID),
+			authorUsername VARCHAR(16) NOT NULL REFERENCES users (username),
 			commentText TEXT NOT NULL,
 			date TEXT NOT NULL
 			);`,
 	}
 
+	// execute each SQL statement
 	for t := 0; t < len(tables); t++ {
 		sqlStmt := tables[t]
 		_, err := db.Exec(sqlStmt)
@@ -199,5 +174,4 @@ func createDatabase(db *sql.DB) error {
 	}
 
 	return nil
-
 }

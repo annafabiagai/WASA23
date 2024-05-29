@@ -19,7 +19,7 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
-	liker, present, err := rt.db.GetUserByID(token)
+	liker, present, err := rt.db.SearchUserByID(token)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -31,15 +31,15 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	var pathPid uint64
-	pathPid, err = strconv.ParseUint(ps.ByName("photoid"), 10, 64)
+	pathPid, err = strconv.ParseUint(ps.ByName("pid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "unlikePhoto: invalid path parameter photo id"
+		stringErr := "unlikePhoto: invalid path parameter pid"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
-	photo, present, err := rt.db.GetPhotoByID(pathPid)
+	photo, present, err := rt.db.SearchPhotoByID(pathPid)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -49,7 +49,6 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
-
 	// delete doesn't raise error if record not present
 
 	// database section

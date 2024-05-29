@@ -19,7 +19,7 @@ func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprout
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
-	banner, present, err := rt.db.GetUserByID(token)
+	banner, present, err := rt.db.SearchUserByID(token)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -31,15 +31,15 @@ func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	var pathUid uint64
-	pathUid, err = strconv.ParseUint(ps.ByName("userid"), 10, 64)
+	pathUid, err = strconv.ParseUint(ps.ByName("uid"), 10, 64)
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "unbanUser: invalid path parameter user id"
+		stringErr := "unbanUser: invalid path parameter uid"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
-	banned, present, err := rt.db.GetUserByID(pathUid)
+	banned, present, err := rt.db.SearchUserByID(pathUid)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

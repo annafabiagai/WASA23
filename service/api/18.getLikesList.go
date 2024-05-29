@@ -1,31 +1,39 @@
 package api
 
+/*
+go run ./cmd/webapi/
+curl -v \
+	-X GET \
+	-H 'Authorization: 1' \
+	localhost:3000/photos/{1}/likes/
+*/
+
 import (
+	"encoding/json"
+	"github.com/julienschmidt/httprouter"
+	"github.com/annafabia03/WASA23/service/api/reqcontext"
 	"net/http"
 	"strconv"
-
-	"github.com/annafabia03/WASA23/service/api/reqcontext"
-	"github.com/julienschmidt/httprouter"
 )
 
-func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+func (rt *_router) getLikesList(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	var token uint64
 	token, err := strconv.ParseUint(r.Header.Get("Authorization"), 10, 64)
 
 	// Unauthorized check
 	if err != nil {
-		stringErr := "likePhoto: invalid authorization token"
+		stringErr := "getLikesList: invalid authorization token"
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
-	liker, present, err := rt.db.SearchUserByID(token)
+	requestingUser, present, err := rt.db.SearchUserByID(token)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	if !present {
-		stringErr := "likePhoto: authorization token not matching any existing user"
+		stringErr := "getLikesList: authorization token not matching any existing user"
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
@@ -35,7 +43,7 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 
 	// BadRequest check
 	if err != nil {
-		stringErr := "likePhoto: invalid path parameter pid"
+		stringErr := "getLikesList: invalid path parameter pid"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
@@ -45,25 +53,25 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 	if !present {
-		stringErr := "likePhoto: path parameter pid not matching any existing photo"
+		stringErr := "getLikesList: path parameter pid not matching any existing photo"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
 
 	// Forbidden check
-	someoneIsBanned, err := rt.db.CheckBanBothDirections(liker.ID, photo.AuthorID)
+	someoneIsBanned, err := rt.db.CheckBanBothDirections(requestingUser.ID, photo.AuthorID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	if someoneIsBanned {
-		stringErr := "likePhoto: someone has banned the other"
+		stringErr := "getLikesList: someone has banned the other"
 		http.Error(w, stringErr, http.StatusForbidden)
 		return
 	}
 
 	// database section
-	err = rt.db.LikePhoto(liker.ID, photo.ID)
+	likesList, err := rt.db.GetLikesList(photo.ID)
 
 	// InternalServerError check
 	if err != nil {
@@ -71,5 +79,7 @@ func (rt *_router) likePhoto(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
-	w.WriteHeader(http.StatusNoContent)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(likesList)
 }

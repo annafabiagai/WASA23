@@ -20,7 +20,7 @@ func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httpro
 		http.Error(w, stringErr, http.StatusUnauthorized)
 		return
 	}
-	requestingUser, present, err := rt.db.GetUserByID(token)
+	requestingUser, present, err := rt.db.SearchUserByID(token)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -41,13 +41,13 @@ func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 	for i, photo := range stream {
 		likesList, err := rt.db.GetLikesList(photo.ID)
-		stream[i].LikeList = likesList
+		stream[i].LikesList = likesList
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		commentsList, err := rt.db.GetCommentsList(photo.ID)
-		stream[i].CommentList = commentsList
+		stream[i].CommentsList = commentsList
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
