@@ -84,58 +84,53 @@ export default {
 </script>
 
 <template>
-	<div class="container-fluid mt-3 mb-5 ">
-
+    <div class="container-fluid mt-3 mb-5">
         <UsersModal
-        :modalID="'likesModal'+photoID" 
-		:usersList="likesList"
-        @visitUser="visitLiker"
+            :modalID="'likesModal' + photoID"
+            :usersList="likesList"
+            @visitUser="visitLiker"
         />
 
         <CommentModal
-        :modalID="'commentModal'+photoID" 
-		:commentsList="commentsList" 
-		:isItMe="isItMe" 
-		:photoID="photoID"
-		@removeComment="removeCommentFromList"
-		@addComment="addCommentToList"
-		/>
+            :modalID="'commentModal' + photoID"
+            :commentsList="commentsList"
+            :isItMe="isItMe"
+            :photoID="photoID"
+            @removeComment="removeCommentFromList"
+            @addComment="addCommentToList"
+        />
 
         <div class="d-flex flex-row justify-content-center">
             <div class="card my-card">
                 <div class="d-flex justify-content-end">
                     <button v-if="isItMe" class="my-trnsp-btn my-dlt-btn me-2" @click="deletePhoto">
-						<!--trash bin-->
-						<i class="fa-solid fa-trash w-100 h-100"></i>
-					</button>
+                        <i class="fa-solid fa-trash w-100 h-100"></i>
+                    </button>
                 </div>
-                <!--photo-->
                 <div class="d-flex justify-content-center photo-background-color">
                     <img :src="photoURL" class="card-img-top img-fluid">
                 </div>
                 <div class="card-body">
                     <div class="container">
                         <div class="d-flex flex-row justify-content-end align-items-center mb-2">
-                            <!--author-->
-							<button class="my-trnsp-btn m-0 p-1 me-auto" @click="visitAuthorProfile">
-                            	<i> From {{authorUsername}}</i>
-							</button>
-                            <!--like-->
-                            <button class="my-trnsp-btn m-0 p-1 d-flex justify-content-center align-items-center">
-                                <i @click="likeToggle" :class="'me-1 my-heart-color w-100 h-100 fa '+(liked ? 'fa-heart' : 'fa-heart-o')"></i>
-                                <i data-bs-toggle="modal" :data-bs-target="'#likesModal'+photoID" class="my-comment-color ">
-                                    {{likesList.length}}
+                            <button class="my-trnsp-btn m-0 p-1 me-auto" @click="visitAuthorProfile">
+                                <i> From {{ authorUsername }}</i>
+                            </button>
+                            <button class="my-trnsp-btn m-0 p-1 d-flex justify-content-center align-items-center" @click="likeToggle">
+                                <span :class="'me-1 like-text ' + (liked ? 'liked' : 'not-liked')">{{ liked ? 'Unlike' : 'Like' }}</span>
+                                <i :data-bs-toggle="'modal'" :data-bs-target="'#likesModal' + photoID" class="my-comment-color">
+                                    {{ likesList.length }}
                                 </i>
                             </button>
-                            <!--comment-->
-                            <button class="my-trnsp-btn m-0 p-1  d-flex justify-content-center align-items-center" 
-							data-bs-toggle="modal" :data-bs-target="'#commentModal'+photoID">
+                            <button class="my-trnsp-btn m-0 p-1 d-flex justify-content-center align-items-center" :data-bs-toggle="'modal'" :data-bs-target="'#commentModal' + photoID">
                                 <i class="my-comment-color fa-regular fa-comment me-1"></i>
-                                <i class="my-comment-color-2"> {{commentsList.length}}</i>
+                                <i class="my-comment-color-2">
+                                    Comments: {{ commentsList.length }} 
+                                </i>
                             </button>
                         </div>
-                        <div class="d-flex flex-row justify-content-start align-items-center ">
-                            <p> Uploaded on {{date}}</p>
+                        <div class="d-flex flex-row justify-content-start align-items-center">
+                            <p> Uploaded on {{ date }}</p>
                         </div>
                     </div>
                 </div>
@@ -145,34 +140,41 @@ export default {
 </template>
 
 <style>
-.photo-background-color{
-	background-color: grey;
+.photo-background-color {
+    background-color: grey;
 }
-.my-card{
-	width: 27rem;
-	border-color: black;
-	border-width: thin;
+.my-card {
+    width: 27rem;
+    border-color: black;
+    border-width: thin;
 }
-.my-heart-color{
-	color: grey;
+.like-text {
+    color: grey;
+    cursor: pointer;
 }
-.my-heart-color:hover{
-	color: red;
+.like-text:hover {
+    color: red;
+}
+.liked {
+    color: red;
+}
+.not-liked {
+    color: grey;
 }
 .my-comment-color {
-	color: grey;
+    color: grey;
 }
-.my-comment-color:hover{
-	color: black;
+.my-comment-color:hover {
+    color: black;
 }
-.my-comment-color-2{
-	color:grey
+.my-comment-color-2 {
+    color: grey;
 }
-.my-dlt-btn{
-	font-size: 19px;
+.my-dlt-btn {
+    font-size: 19px;
 }
-.my-dlt-btn:hover{
-	font-size: 19px;
-	color: var(--color-red-danger);
+.my-dlt-btn:hover {
+    font-size: 19px;
+    color: var(--color-red-danger);
 }
 </style>
