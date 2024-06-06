@@ -26,7 +26,7 @@ export default {
 </script>
 
 <template>
-	<div class="background">
+	<div class="">
 		<div class="container py-5">
 			<div class="row justify-content-center align-items-center">
 				<div class="col-md-6">

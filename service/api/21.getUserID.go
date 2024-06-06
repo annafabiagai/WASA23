@@ -32,9 +32,13 @@ func (rt *_router) getUserId(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	username := ps.ByName("username")
-
+	if (len(username) < 3 && len(username) > 16){
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	} 
+		
 	/*
-	
+
 	// BadRequest check
 	if err != nil {
 		stringErr := "getUserId: invalid path parameter username"

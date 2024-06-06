@@ -43,10 +43,10 @@ export default {
 			</button>
 		</header>
 
-		<div class="container-fluid">
+		<div class="container-fluid background">
 			<div class="row">
 				<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-					<div class="position-sticky pt-3 sidebar-sticky">
+					<div class="position-sticky pt-3 sidebar-sticky color2">
 						<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
 							<span>General</span>
 						</h6>
@@ -145,7 +145,10 @@ export default {
 
 <style>
 	.background {
-		background-color: rgba(245, 176, 79, 0.179);
+		background-color: rgba(255, 6, 6, 0.179);
 		height: 100vh;
+	}
+	.color2{
+		background-color: rgba(235, 248, 0, 0.179);
 	}
 </style>
