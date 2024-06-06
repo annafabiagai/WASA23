@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-
+	"strings"
 	"github.com/annafabia03/WASA23/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 )
@@ -53,6 +53,12 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	}
 	if present {
 		stringErr := "setMyUserName: username already exists"
+		http.Error(w, stringErr, http.StatusBadRequest)
+		return
+	}
+
+	if (strings.ToLower(dbUser.Name) == strings.ToLower(updatedUser.Name)){
+		stringErr := "setMyUserName: same username regardless of letter case"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}

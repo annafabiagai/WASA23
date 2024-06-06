@@ -1,12 +1,6 @@
 package api
 
-/*
-go run ./cmd/webapi/
-curl -v \
-	-X GET \
-	-H 'Authorization: 1' \
-	localhost:3000/photos/{1}/likes/
-*/
+
 
 import (
 	"encoding/json"

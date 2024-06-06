@@ -199,15 +199,19 @@ export default {
                     <div class="row">
                         <div class="col">
                             <div class="card-body d-flex justify-content-between align-items-center">
-                                <h5 class="card-title p-0 me-auto mt-auto">@{{username}}</h5>
+                                <div class="username-container d-flex justify-content-center w-100">
+                                    <h5 class="card-title m-0">{{username}}</h5>
+                                </div>
 
-                                <button v-if="!isItMe && !isInMyBannedList" @click="followBtn" class="btn btn-success ms-2">
-                                    {{doIFollowUser ? "Unfollow" : "Follow"}}
-                                </button>
+                                <div class="button-container ms-auto d-flex">
+                                    <button v-if="!isItMe && !isInMyBannedList" @click="followBtn" class="btn btn-success ms-2">
+                                        {{doIFollowUser ? "Unfollow" : "Follow"}}
+                                    </button>
 
-                                <button v-if="!isItMe" @click="banBtn" class="btn btn-danger ms-2">
-                                    {{isInMyBannedList ? "Unban" : "Ban"}}
-                                </button>
+                                    <button v-if="!isItMe" @click="banBtn" class="btn btn-danger ms-2">
+                                        {{isInMyBannedList ? "Unban" : "Ban"}}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -238,9 +242,14 @@ export default {
             <div class="container-fluid mt-3">
                 <div class="row ">
                     <div class="col-12 d-flex justify-content-center">
-                        <h2>Posts</h2>
+                        <h2>Photos</h2>
                         <input id="fileUploader" type="file" class="profile-file-upload" @change="uploadPhoto" accept=".jpg, .png">
-                        <label v-if="isItMe" class="btn my-btn-add-photo ms-2 d-flex align-items-center" for="fileUploader"> Add </label>
+                        <label v-if="isItMe" class="btn my-btn-add-photo ms-2 d-flex align-items-center" for="fileUploader"> + </label>
+                    </div>
+                </div>
+                <div v-if="isItMe" class="row">
+                    <div class="col-12 d-flex justify-content-center">
+                        <p class="add-photo-phrase">Add a photo to your Gallery!</p>
                     </div>
                 </div>
                 <div class="row ">
@@ -285,17 +294,37 @@ export default {
     display: none;
 }
 .my-btn-add-photo{
-    background-color: green;
+    background-color: rgb(185, 93, 2);
     border-color: grey;
 }
 .my-btn-add-photo:hover{
     color: white;
-    background-color: green;
-    border-color: grey;
+    background-color: brown;
+    border-color: white;
 }
 .btn-foll{
     background-color: transparent;
     border: none;
     padding: 5px;
 }
+.username-container {
+    flex: 1;
+    text-align: center;
+}
+
+.card-title {
+    font-size: 2rem; /* Adjust the font size as needed */
+}
+
+.button-container {
+    display: flex;
+    align-items: center;
+}
+
+.add-photo-phrase {
+    color: black;
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
 </style>

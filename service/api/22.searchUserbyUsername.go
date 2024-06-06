@@ -42,6 +42,25 @@ func (rt *_router) searchUserByUsername(w http.ResponseWriter, r *http.Request, 
 		return
 	}
 
+	if len(usersList)==0{
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	for _, userToSearch := range usersList{
+		var banned_check, err = rt.db.CheckBan(userToSearch.ID , token)
+		// InternalServerError check
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if banned_check{
+			w.WriteHeader(http.StatusForbidden)
+			return
+		}
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(usersList)

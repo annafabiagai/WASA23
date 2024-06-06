@@ -104,7 +104,7 @@ export default {
             <div class="card my-card">
                 <div class="d-flex justify-content-end">
                     <button v-if="isItMe" class="my-trnsp-btn my-dlt-btn me-2" @click="deletePhoto">
-                        <i class="fa-solid fa-trash w-100 h-100"></i>
+                        Delete
                     </button>
                 </div>
                 <div class="d-flex justify-content-center photo-background-color">
@@ -141,7 +141,7 @@ export default {
 
 <style>
 .photo-background-color {
-    background-color: grey;
+    background-color: black;
 }
 .my-card {
     width: 27rem;
