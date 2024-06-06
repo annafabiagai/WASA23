@@ -33,12 +33,16 @@ func (rt *_router) getUserId(w http.ResponseWriter, r *http.Request, ps httprout
 
 	username := ps.ByName("username")
 
+	/*
+	
 	// BadRequest check
 	if err != nil {
 		stringErr := "getUserId: invalid path parameter username"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
 	}
+
+	*/
 	requestedUser, present, err := rt.db.SearchUserByUsername(username)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
