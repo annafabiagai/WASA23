@@ -145,10 +145,10 @@ export default {
 
 <style>
 	.background {
-		background-color: rgba(255, 6, 6, 0.179);
+		background-color: rgba(255, 127, 22, 0.677);
 		height: 100vh;
 	}
 	.color2{
-		background-color: rgba(235, 248, 0, 0.179);
+		background-color: rgba(251, 253, 83, 0.179);
 	}
 </style>

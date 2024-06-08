@@ -53,7 +53,7 @@ export default {
 			/>
 		</div>
 		<div v-if="photos.length === 0" class="row">
-			<h1 class="d-flex justify-content-center mt-5" style="color: rgb(0, 0, 0);">There's no content yet, follow somebody!</h1>
+			<h1 class="d-flex justify-content-center mt-5" style="color: rgb(0, 0, 0);">Gallery is empty!</h1>
 		</div>
 	</div>
 </template>
