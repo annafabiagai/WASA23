@@ -1,10 +1,8 @@
 package api
 
-
-
 import (
-	"github.com/julienschmidt/httprouter"
 	"github.com/annafabia03/WASA23/service/api/reqcontext"
+	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
 )

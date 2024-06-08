@@ -42,20 +42,20 @@ func (rt *_router) searchUserByUsername(w http.ResponseWriter, r *http.Request, 
 		return
 	}
 
-	if len(usersList)==0{
+	if len(usersList) == 0 {
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
 
-	for _, userToSearch := range usersList{
-		var banned_check, err = rt.db.CheckBan(userToSearch.ID , token)
+	for _, userToSearch := range usersList {
+		var banned_check, err = rt.db.CheckBan(userToSearch.ID, token)
 		// InternalServerError check
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		if banned_check{
+		if banned_check {
 			w.WriteHeader(http.StatusForbidden)
 			return
 		}

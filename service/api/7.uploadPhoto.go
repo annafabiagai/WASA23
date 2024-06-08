@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/annafabia03/WASA23/service/fileSystem"
 	"github.com/annafabia03/WASA23/service/api/reqcontext"
+	"github.com/annafabia03/WASA23/service/fileSystem"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -83,6 +83,5 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(photo)
-
 
 }

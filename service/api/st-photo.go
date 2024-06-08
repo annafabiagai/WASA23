@@ -1,8 +1,8 @@
 package api
 
 import (
-	"github.com/annafabia03/WASA23/service/fileSystem"
 	"github.com/annafabia03/WASA23/service/database"
+	"github.com/annafabia03/WASA23/service/fileSystem"
 )
 
 type Photo struct {

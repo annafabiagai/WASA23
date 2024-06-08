@@ -2,11 +2,11 @@ package api
 
 import (
 	"encoding/json"
+	"github.com/annafabia03/WASA23/service/api/reqcontext"
+	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
 	"strings"
-	"github.com/annafabia03/WASA23/service/api/reqcontext"
-	"github.com/julienschmidt/httprouter"
 )
 
 func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
@@ -57,7 +57,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
-	if (strings.ToLower(dbUser.Name) == strings.ToLower(updatedUser.Name)){
+	if strings.ToLower(dbUser.Name) == strings.ToLower(updatedUser.Name) {
 		stringErr := "setMyUserName: same username regardless of letter case"
 		http.Error(w, stringErr, http.StatusBadRequest)
 		return
