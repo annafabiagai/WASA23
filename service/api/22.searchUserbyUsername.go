@@ -56,7 +56,7 @@ func (rt *_router) searchUserByUsername(w http.ResponseWriter, r *http.Request, 
 		}
 
 		if banned_check {
-			w.WriteHeader(http.StatusForbidden)
+			http.Error(w, "User has been banned from this service.", http.StatusForbidden)
 			return
 		}
 	}
