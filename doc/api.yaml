@@ -1,13 +1,10 @@
 openapi: 3.0.0
 info:
-  title: WASAPhoto
+  title: Gallery
   description: >-
-    Keep in touch with your friends
-    by sharing photos of special moments,
-    thanks to WASAPhoto!
-
-    You can upload your photos directly from your PC,
-    and they will be visible to everyone following you.
+    Start to see what other people
+    share inside their gallery.
+    Follow them to see all their pictures uploaded!
   version: 0.0.1
 
 tags:
