@@ -294,7 +294,7 @@ export default {
     display: none;
 }
 .my-btn-add-photo{
-    background-color: rgba(255, 214, 68, 0.755);
+    background-color: white;
     border-color: grey;
 }
 .my-btn-add-photo:hover{
