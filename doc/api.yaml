@@ -486,24 +486,6 @@ paths:
           # Internal Server Error
           $ref: '#/components/responses/InternalServerError'
 
-    # get:
-    #   operationId: getPhoto
-    #   tags: [getters]
-    #   summary: get binary image
-    #   description: Get binary image.
-    #   responses:
-    #     "200":
-    #       # OK
-    #       description: Photo file retrieved successfully.
-    #       content:
-    #         image/*:
-    #           schema: { $ref: '#/components/schemas/BinaryImage' }
-    #     "400":
-    #       # Bad Request
-    #       description: |-
-    #         Invalid path parameter pid or;
-    #         pid not matching any existing photo.
-
 
   /likes/{pid}:
 
@@ -596,37 +578,6 @@ paths:
           # Internal Server Error
           $ref: '#/components/responses/InternalServerError'
 
-    # get:
-    #   operationId: getCommentsList
-    #   tags: [getters]
-    #   summary: get photo comments
-    #   description: Get the list of comments for a specific photo.
-    #   responses:
-    #     "200":
-    #       # OK
-    #       description: List of photo comments retrieved successfully.
-    #       content:
-    #         application/json:
-    #           schema:
-    #             description: Comments list.
-    #             type: array
-    #             minItems: 0
-    #             maxItems: 99
-    #             items: { $ref: '#/components/schemas/Comment' }
-    #     "400":
-    #       # Bad Request
-    #       description: |-
-    #         Invalid path parameter pid or;
-    #         pid not matching any existing photo.
-    #     "401":
-    #       # Unauthorized
-    #       $ref: '#/components/responses/Unauthorized'
-    #     "403":
-    #       # Forbidden
-    #       $ref: '#/components/responses/Forbidden'
-    #     "500":
-    #       # Internal Server Error
-    #       $ref: '#/components/responses/InternalServerError'
 
 
   /photos/{pid}/comments/{cid}:
@@ -806,42 +757,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 
 
-  # /photos/{pid}/likes/:
-
-  #   parameters:
-  #     - $ref: '#/components/parameters/PhotoID'
-
-    # get:
-    #   operationId: getLikesList
-    #   tags: [getters]
-    #   summary: get photo likes
-    #   description: Get the list of users who liked a specific photo.
-    #   responses:
-    #     "200":
-    #       # OK
-    #       description: List of photo likes retrieved successfully.
-    #       content:
-    #         application/json:
-    #           schema:
-    #             description: Users list.
-    #             type: array
-    #             minItems: 0
-    #             maxItems: 99
-    #             items: { $ref: '#/components/schemas/User' }
-    #     "400":
-    #       # Bad Request
-    #       description: |-
-    #         Invalid path parameter pid or;
-    #         pid not matching any existing photo.
-    #     "401":
-    #       # Unauthorized
-    #       $ref: '#/components/responses/Unauthorized'
-    #     "403":
-    #       # Forbidden
-    #       $ref: '#/components/responses/Forbidden'
-    #     "500":
-    #       # Internal Server Error
-    #       $ref: '#/components/responses/InternalServerError'
 
 
   /stream:
