@@ -91,7 +91,7 @@ type AppDatabase interface {
 
 	// Search
 	SearchUser(usernameToSearch string) (usersList []User, err error)
-
+	ListAllUser() (usersList []User, err error) 
 	Ping() error
 }
 

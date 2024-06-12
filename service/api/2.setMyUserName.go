@@ -63,6 +63,22 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
+	usersList, err := rt.db.ListAllUser()
+
+	// InternalServerError check
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	for _, user := range usersList {
+		if strings.ToLower(user.Name) == strings.ToLower(updatedUser.Name) {
+			stringErr := "setMyUserName: same username regardless of letter case"
+			http.Error(w, stringErr, http.StatusBadRequest)
+			return
+		}
+	}
+
 	// database section
 	err = rt.db.UpdateUsername(updatedUser.ToDatabase())
 
